@@ -22,5 +22,5 @@ In the `./FFT/` folder use the bash command `make`
 `./It_CT.out`
 
 ## TO-DOS
-- Generalize `./eval/eval_correctness.cpp` subroutines to take function pointers
+- ~Generalize `./eval/eval_correctness.cpp` subroutines to take function pointers as its parameter~
 - Implement subroutines to evaluate performances (time evalution of execution)

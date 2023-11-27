@@ -27,15 +27,19 @@ int main()
     // randomize a vector
     // vec      : base vec
     // vec_fftw : used to store results from FFTW
+
     Complex *vec = rand_vec(N);
     //Complex *vec_fftw = rand_vec(N);
     cout << "Input vec:" << endl;
     show_vec(vec, N);
 
+	cout << endl;
+
     // Creating a Copy of vec 
     // used by our method
     Complex *vec_fftw = (Complex*)malloc(N * sizeof(Complex));
     copy_vec(vec, vec_fftw, N);
+
 
     // ####### FFT standard
     fftw_1d_wrapper(vec_fftw, N);
@@ -59,14 +63,29 @@ int main()
     free(vec_fftw);
 
 
-    // **** Testing Given Data set 
+    // ******** Testing Given Data set ******* // 
+
+	/*
+	 * Available 1D FFT methods available for testing:
+	 *
+	 * 		- fft_it_1d 		: 1D FFT Iterative Method
+	 * 		- fftw_1d_wrapper	: 1D FFT method from FFTW
+	 *		- 
+	 */
+
     // Load Data
     Dataset finger1;
-    // Eval Performance and output to a file
-    FFT1d_4Data(finger1, 
-             true, // ifIter 
-             true);// toFile
+
+    // Eval the Correctness of Iterative 1D FFT and output to a file
+    FFT1d_4Data(finger1, // Dataset
+				fft_it_1d, // FFT method to test
+                true, // if write toFile
+                "our1d_it.txt");// filename
     
+    FFT1d_4Data(finger1, // Dataset
+				fftw_1d_wrapper, // FFT method to test
+                true, // if write toFile
+                "our1d_fftw.txt");// filename
     //fftw_free(vec_in);
     //fftw_free(vec_out); // no need to reclaim memory for stack allocation
 }

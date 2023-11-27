@@ -2,7 +2,7 @@
 
 *Recommended format*
 
-`void FFT_method(Complex *vec, (unsigned) int N)`
+`void FFT_method(Complex *vec, int N)`
 
 - `Complex`(dtype) $\equiv$ `complex<double>`
 - `N`: length of the array
