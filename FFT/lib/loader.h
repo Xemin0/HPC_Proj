@@ -2,8 +2,8 @@
  * Loading Data from the specified path
  */
 
-#ifndef LOADER_H
-#define LOADER_H
+#ifndef LIB_LOADER_H_
+#define LIB_LOADER_H_
 
 #include <complex>
 //#include <string>
@@ -29,4 +29,4 @@ public:
     // Get an element from the dataset (long vector) 
     std::complex<double> getElement(unsigned int i, unsigned int j, unsigned int k, bool isComplex = true) const;
 };
-#endif // LOADER_H
+#endif // LIB_LOADER_H_
