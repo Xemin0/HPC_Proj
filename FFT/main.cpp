@@ -62,6 +62,28 @@ void fft(Complex *x, int N)
     }
 }
 
+// Forward declaration
+void fftw2Complex(fftw_complex *arr, Complex *x, unsigned int N);
+
+void fftw_wrapper(Complex *x, int N)
+{
+    /*
+     * Wrapper for FFTW library call
+     */
+    fftw_complex *vec_in, vec_out[N];
+    // Reinterpret the memory storage instead of allocating new memory 
+    vec_in = reinterpret_cast<fftw_complex*>(x);
+
+    // Creating plan for 1D FFT in FFTW
+    fftw_plan p;
+    p = fftw_plan_dft_1d(N, vec_in, vec_out, FFTW_FORWARD, FFTW_ESTIMATE);
+    fftw_execute(p);
+    
+    // convert to Complex dtype
+    fftw2Complex(vec_out, x, N);
+
+    fftw_destroy_plan(p);
+}
 
 
 // *******************
@@ -148,7 +170,7 @@ unsigned long get_time(){
 }
 
 // Performance Evaluation
-void FFT4Data(Dataset& ds, bool ifIter = true, bool toFile = true, string filename = "./Data/Results/"){
+void FFT4Data(Dataset& ds, bool ifIter = true, bool toFile = true, string root_path = "./Data/Results/"){
     /*
      * Performance of FFT for a given Dataset in microsecond (us)
      * 
@@ -163,45 +185,64 @@ void FFT4Data(Dataset& ds, bool ifIter = true, bool toFile = true, string filena
 
 
     // File name preparation
+    string ourfile;
     if (ifIter)
-        filename += "iter_results.txt";
+    {
+       ourfile = root_path + "iter_results_our.txt";
+    }
     else
-        filename += "recur_results.txt";
-
+    {
+       ourfile = root_path + "recur_results_our.txt";
+    }
+    string fftwfile = root_path + "fftw_results.txt";
     
-    ofstream fftFile(filename);
-    if (!fftFile.is_open()){
+    ofstream fftOur(ourfile); // for our itermethod
+    ofstream fftFFTW(fftwfile); // for fftw result
+    if (!fftOur.is_open() || !fftFFTW.is_open()){
         cerr << "Failed to open file for writing!" << endl;
     }
-    cout << "Writing results to: " << filename << endl;
+    cout << "Writing results to: " << ourfile << endl;
+    cout << "Writing FFTW results to: " << fftwfile << endl;
 
 
 
     // get data for each channel/column
     Complex *tmp = new Complex[cols];
+    Complex *tmp_fftw = new Complex[cols];
+
     // FFT for each channel/column
     for (int i = 0; i < 1; i++) // ***  change 1 to rows
         for (int k = 0; k < 1; k++){ // *** change 1 to depth
             // load channel/row data to tmp
-            for (int j = 0; j < cols; j++)
+            for (int j = 0; j < cols; j++){
                 tmp[j] = ds.getElement(i+1, j+1, k+1); // Copy by value ?? not by reference??
+                tmp_fftw[j] = tmp[j];
+            }
 
-            // FFT
+            // FFT with our method
             fft(tmp, cols);
 
-            // Write result to the output array 
+            // FFT with FFTW Library 
+            fftw_wrapper(tmp_fftw, cols);
+
+            // Write Our result to the output array 
             // Column Major
             for (int j = 0; j < cols; j++)
                 ds.fft_data[k * rows * cols + j * rows + i] = tmp[j];
             
-            // store the result for current channel // channel
+            // store the result for current channel
             if (toFile)      
-                for (int j = 0; j < cols; j++)
-                    fftFile << "Channel " << i << ", FFT[" << j << "] = " << tmp[j] << endl;
+                for (int j = 0; j < cols; j++){
+                    fftOur << "Channel " << i << ", FFT[" << j << "] = " << tmp[j] << endl;
+                    fftFFTW << "Channel " << i << ", FFT[" << j << "] = " << tmp_fftw[j] << endl;
+
+                }
         }
 
-    fftFile.close();
+    fftOur.close();
+    fftFFTW.close();
     delete[] tmp;
+    delete[] tmp_fftw;
 }
 
 // Main Driver for Testing
@@ -212,47 +253,47 @@ int main()
     // vec      : base vec
     // vec_fftw : used to store results from FFTW
     Complex *vec = rand_vec(N);
-    Complex *vec_fftw = rand_vec(N);
+    //Complex *vec_fftw = rand_vec(N);
 
     // Creating a Copy of vec 
     // used by our method
-    Complex *vec_cpy = (Complex*)malloc(N * sizeof(Complex));
-    copy_vec(vec, vec_cpy, N);
+    Complex *vec_fftw = (Complex*)malloc(N * sizeof(Complex));
+    copy_vec(vec, vec_fftw, N);
 
     // ####### FFT standard
+    fftw_wrapper(vec_fftw, N);
     // create input and output vectors for FFTW using stack allocation
-    fftw_complex *vec_in, vec_out[N];
+    //fftw_complex *vec_in, vec_out[N];
     //Complex2fftw(vec, vec_in, N);
     // Reinterpret the memory storage instead of allocating new memory 
-    vec_in = reinterpret_cast<fftw_complex*>(vec);
+    //vec_in = reinterpret_cast<fftw_complex*>(vec);
 
     // Creating plan for 1D FFT in FFTW
-    fftw_plan p;
-    p = fftw_plan_dft_1d(N, vec_in, vec_out, FFTW_FORWARD, FFTW_ESTIMATE);
-    fftw_execute(p); 
+    //fftw_plan p;
+    //p = fftw_plan_dft_1d(N, vec_in, vec_out, FFTW_FORWARD, FFTW_ESTIMATE);
+    //fftw_execute(p); 
 
     // Convert to Complex dtype
-    fftw2Complex(vec_out, vec_fftw, N);
+    //fftw2Complex(vec_out, vec_fftw, N);
 
-    fftw_destroy_plan(p);
+    //fftw_destroy_plan(p);
 
     // ####### FFT CT Method
-    fft(vec_cpy, N);
+    fft(vec, N);
 
     // Show both vecs
     cout << "FFT result by standard library:" << endl;
     show_vec(vec_fftw, N);
 
     cout << "FFT result by CT Method:" << endl;
-    show_vec(vec_cpy, N);
+    show_vec(vec, N);
 
     // Check if two vecs are equal 
     cout << boolalpha;
-    cout << "Are FFT results the same?: " << bool(areVecsEqual(vec_fftw, vec_cpy, N)) << endl;
+    cout << "Are FFT results the same?: " << bool(areVecsEqual(vec_fftw, vec, N)) << endl;
     
     // free memory
     free(vec);
-    free(vec_cpy);
     free(vec_fftw);
 
 
