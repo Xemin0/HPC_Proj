@@ -180,24 +180,24 @@ void FFT4Data(Dataset& ds, bool ifIter = true, bool toFile = true, string filena
     // get data for each channel/column
     Complex *tmp = new Complex[rows];
     // FFT for each channel/column
-    for (int k = 0; k < depth; k++)
-        for (int j = 0; j < cols; j++){
-            // load channel/column data to tmp
-            for (int i = 0; i < rows; i++)
-                tmp[i] = ds.getElement(i+1, j+1, k+1); // Copy by value ?? not by reference??
+    for (int i = 0; i < rows; i++)
+        for (int k = 0; k < depth; k++){
+            // load channel/row data to tmp
+            for (int j = 0; j < rows; j++)
+                tmp[j] = ds.getElement(i+1, j+1, k+1); // Copy by value ?? not by reference??
 
             // FFT
             fft(tmp, rows);
 
             // Write result to the output array 
             // Column Major
-            for (int i = 0; i < rows; i++)
-                ds.fft_data[k * rows * cols + j * rows + i] = tmp[i];
+            for (int j = 0; j < rows; j++)
+                ds.fft_data[k * rows * cols + j * rows + i] = tmp[j];
             
             // store the result for current channel // channel
             if (toFile)      
-                for (int i = 0; i < rows; i++)
-                    fftFile << "Channel " << j << ", FFT[" << i << "] = " << tmp[i] << endl;
+                for (int j = 0; j < cols; j++)
+                    fftFile << "Channel " << i << ", FFT[" << j << "] = " << tmp[j] << endl;
         }
 
     fftFile.close();
