@@ -178,7 +178,7 @@ void FFT4Data(Dataset& ds, bool ifIter = true, bool toFile = true, string filena
 
 
     // get data for each channel/column
-    Complex *tmp = new Complex[rows];
+    Complex *tmp = new Complex[cols];
     // FFT for each channel/column
     for (int i = 0; i < 1; i++) // ***  change 1 to rows
         for (int k = 0; k < 1; k++){ // *** change 1 to depth
