@@ -183,6 +183,10 @@ void FFT4Data(Dataset& ds, bool ifIter = true, bool toFile = true, string root_p
     cout << "cols = " << cols << endl;
     cout << "depth = " << depth << endl;
 
+    // Iterative FFT requires input size to be a power of 2
+    int truncated_cols = log2(cols);
+    truncated_cols = pow(2, truncated_cols);
+    cout << "resized column size: \t" << truncated_cols << endl;
 
     // File name preparation
     string ourfile;
@@ -207,32 +211,32 @@ void FFT4Data(Dataset& ds, bool ifIter = true, bool toFile = true, string root_p
 
 
     // get data for each channel/column
-    Complex *tmp = new Complex[cols];
-    Complex *tmp_fftw = new Complex[cols];
+    Complex *tmp = new Complex[truncated_cols];
+    Complex *tmp_fftw = new Complex[truncated_cols];
 
     // FFT for each channel/column
     for (int i = 0; i < 1; i++) // ***  change 1 to rows
         for (int k = 0; k < 1; k++){ // *** change 1 to depth
             // load channel/row data to tmp
-            for (int j = 0; j < cols; j++){
+            for (int j = 0; j < truncated_cols; j++){
                 tmp[j] = ds.getElement(i+1, j+1, k+1); // Copy by value ?? not by reference??
                 tmp_fftw[j] = tmp[j];
             }
 
             // FFT with our method
-            fft(tmp, cols);
+            fft(tmp, truncated_cols);
 
             // FFT with FFTW Library 
-            fftw_wrapper(tmp_fftw, cols);
+            fftw_wrapper(tmp_fftw, truncated_cols);
 
             // Write Our result to the output array 
             // Column Major
-            for (int j = 0; j < cols; j++)
-                ds.fft_data[k * rows * cols + j * rows + i] = tmp[j];
+            for (int j = 0; j < truncated_cols; j++)
+                ds.fft_data[k * rows * truncated_cols + j * rows + i] = tmp[j];
             
             // store the result for current channel
             if (toFile)      
-                for (int j = 0; j < cols; j++){
+                for (int j = 0; j < truncated_cols; j++){
                     fftOur << "Channel " << i << ", FFT[" << j << "] = " << tmp[j] << endl;
                     fftFFTW << "Channel " << i << ", FFT[" << j << "] = " << tmp_fftw[j] << endl;
 
@@ -254,6 +258,8 @@ int main()
     // vec_fftw : used to store results from FFTW
     Complex *vec = rand_vec(N);
     //Complex *vec_fftw = rand_vec(N);
+    cout << "Input vec:" << endl;
+    show_vec(vec, N);
 
     // Creating a Copy of vec 
     // used by our method
