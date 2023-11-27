@@ -29,6 +29,7 @@ Dataset::Dataset(const std::string& dataFilename, const std::string& dimFilename
     // Allocate Memory for 
     data = new double[rows * cols * depth];
     cdata = new complex<double>[rows * cols * depth];
+    fft_data = new complex<double>[rows * cols * depth];
 
     // Read binary data
     ifstream dataFile(dataFilename, std::ios::binary);

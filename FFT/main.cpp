@@ -148,7 +148,7 @@ unsigned long get_time(){
 }
 
 // Performance Evaluation
-void FFT4Data(Dataset& ds, bool ifIter = true, bool toFile = true, string filename = "../Results/"){
+void FFT4Data(Dataset& ds, bool ifIter = true, bool toFile = true, string filename = "./Data/Results/"){
     /*
      * Performance of FFT for a given Dataset in microsecond (us)
      * 
@@ -157,6 +157,10 @@ void FFT4Data(Dataset& ds, bool ifIter = true, bool toFile = true, string filena
      */
     int rows, cols, depth;   
     ds.getDimensions(rows, cols, depth);
+    cout << "rows = " << rows << endl;
+    cout << "cols = " << cols << endl;
+    cout << "depth = " << depth << endl;
+
 
     // File name preparation
     if (ifIter)
@@ -180,7 +184,7 @@ void FFT4Data(Dataset& ds, bool ifIter = true, bool toFile = true, string filena
         for (int j = 0; j < cols; j++){
             // load channel/column data to tmp
             for (int i = 0; i < rows; i++)
-                tmp[j] = ds.getElement(i+1, j+1, k+1); // Copy by value ?? not by reference??
+                tmp[i] = ds.getElement(i+1, j+1, k+1); // Copy by value ?? not by reference??
 
             // FFT
             fft(tmp, rows);
@@ -260,7 +264,6 @@ int main()
              true, // ifIter 
              true);// toFile
     
-
     //fftw_free(vec_in);
     //fftw_free(vec_out); // no need to reclaim memory for stack allocation
 }
