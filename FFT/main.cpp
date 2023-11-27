@@ -183,7 +183,7 @@ void FFT4Data(Dataset& ds, bool ifIter = true, bool toFile = true, string filena
     for (int i = 0; i < 1; i++) // ***  change 1 to rows
         for (int k = 0; k < 1; k++){ // *** change 1 to depth
             // load channel/row data to tmp
-            for (int j = 0; j < rows; j++)
+            for (int j = 0; j < cols; j++)
                 tmp[j] = ds.getElement(i+1, j+1, k+1); // Copy by value ?? not by reference??
 
             // FFT
@@ -191,7 +191,7 @@ void FFT4Data(Dataset& ds, bool ifIter = true, bool toFile = true, string filena
 
             // Write result to the output array 
             // Column Major
-            for (int j = 0; j < rows; j++)
+            for (int j = 0; j < cols; j++)
                 ds.fft_data[k * rows * cols + j * rows + i] = tmp[j];
             
             // store the result for current channel // channel
