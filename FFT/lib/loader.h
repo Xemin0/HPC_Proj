@@ -18,13 +18,15 @@ private:
 public:
     std::complex<double> *fft_data;  // Column major storage
     // Constructor 
-    Dataset(const std::string& dataFilename = "../Data/finger1_data.bin", const std::string& dimFilename = "finger1_dimensions.txt");
+    Dataset(const std::string& dataFilename = "./Data/finger1_data.bin", const std::string& dimFilename = "./Data/finger1_dimensions.txt");
     // Load data along with dimensions from files in ../Data
+
+    ~Dataset();
 
     // Accesoor for the dimensions
     void getDimensions(int& r, int& c, int& d) const;
 
     // Get an element from the dataset (long vector) 
-    std::complex<double> getElement(unsigned int i, unsigned int j, unsigned int k) const;
+    std::complex<double> getElement(unsigned int i, unsigned int j, unsigned int k, bool isComplex = true) const;
 };
 #endif // LOADER_H

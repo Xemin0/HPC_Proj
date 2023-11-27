@@ -6,70 +6,74 @@
 #include <fstream> // File operations
 #include <stdexcept>
 #include <complex>
+
+#include "../lib/loader.h"
 //#include <string>
 
 using namespace std;
 
 
-class Dataset {
-private:
-    double *data; // 1D array
-    int rows, cols, depth;
-    complex<double> *cdata; // 1D array 0 imag part by default
 
-public:
-    complex<double> *fft_data; // 1D array to store fft result
-    // Constructor 
-    Dataset(const std::string& dataFilename = "../Data/finger1_data.bin", const std::string& dimFilename = "finger1_dimensions.txt"){
-        // Load data along with dimensions from files in ../Data
-    
-        // Read dimensions 
-        ifstream dimFile(dimFilename);
-        if (!dimFile.is_open())
-            throw runtime_error("Cannot open dimension file.");
+// Constructor 
+Dataset::Dataset(const std::string& dataFilename, const std::string& dimFilename){
+    // Load data along with dimensions from files in ../Data
 
-        dimFile >> rows >> cols >> depth;
-        dimFile.close();
+    // Read dimensions 
+    ifstream dimFile(dimFilename);
+    if (!dimFile.is_open())
+        throw runtime_error("Cannot open dimension file.");
 
-        // Allocate Memory for 
-        data = new double[rows * cols * depth];
-        cdata = new complex<double>[rows * cols * depth];
+    dimFile >> rows >> cols >> depth;
+    dimFile.close();
 
-        // Read binary data
-        ifstream dataFile(dataFilename, std::ios::binary);
-        if (!dataFile.is_open())
-            throw runtime_error("Cannot open data file.");
-        // expected char from binary file
-        dataFile.read(reinterpret_cast<char*>(data), rows * cols * depth * sizeof(double));
-        dataFile.close();
+    // Allocate Memory for 
+    data = new double[rows * cols * depth];
+    cdata = new complex<double>[rows * cols * depth];
 
-        // convert data to complex data for FFT
-        for (int i = 1; i <= rows * cols * depth; i++)
-            cdata[i] = complex<double>(data[i], 0);
-    }
+    // Read binary data
+    ifstream dataFile(dataFilename, std::ios::binary);
+    if (!dataFile.is_open())
+        throw runtime_error("Cannot open data file.");
+    // expected char from binary file
+    dataFile.read(reinterpret_cast<char*>(data), rows * cols * depth * sizeof(double));
+    dataFile.close();
 
-    // Accesoor for the dimensions
-    void getDimensions(int& r, int& c, int& d) const{
-        r = rows; c = cols; d = depth;
-    }
+    // convert data to complex data for FFT
+    for (int i = 1; i <= rows * cols * depth; i++)
+        cdata[i] = complex<double>(data[i], 0);
+}
 
-    // Get an element from the dataset (long vector) 
-    complex<double> getElement(unsigned int i, unsigned int j, unsigned int k, bool isComplex = true) const{
-        if (i < 1 || i > rows || j < 1 || j > cols || k < 1 || k > depth)
-            throw out_of_range("Index out of range.");
 
-        // Convert 1-based indices to 0-based indices for internal storage
-        // matlab array to cpp array indices
-        // **** NECESSARY?? ****
-        int zeroBasedI = i - 1;
-        int zeroBasedJ = j - 1;
-        int zeroBasedK = k - 1;
+Dataset::~Dataset()
+{
+    delete[] data;
+    delete[] cdata;
+    delete[] fft_data;
+}
 
-        if (isComplex)
-            return cdata[zeroBasedK * (rows * cols) + zeroBasedJ * rows + zeroBasedI];
-        else
-            return data[zeroBasedK * (rows * cols) + zeroBasedJ * rows + zeroBasedI];
-            
-    }
-};
+
+// Accesoor for the dimensions
+void Dataset::getDimensions(int& r, int& c, int& d) const{
+    r = rows; c = cols; d = depth;
+}
+
+// Get an element from the dataset (long vector) 
+complex<double> Dataset::getElement(unsigned int i, unsigned int j, unsigned int k, bool isComplex) const{
+    if (i < 1 || i > rows || j < 1 || j > cols || k < 1 || k > depth)
+        throw out_of_range("Index out of range.");
+
+    // Convert 1-based indices to 0-based indices for internal storage
+    // matlab array to cpp array indices
+    // **** NECESSARY?? ****
+    int zeroBasedI = i - 1;
+    int zeroBasedJ = j - 1;
+    int zeroBasedK = k - 1;
+
+    if (isComplex)
+        return cdata[zeroBasedK * (rows * cols) + zeroBasedJ * rows + zeroBasedI];
+    else
+        return data[zeroBasedK * (rows * cols) + zeroBasedJ * rows + zeroBasedI];
+        
+}
+
 
