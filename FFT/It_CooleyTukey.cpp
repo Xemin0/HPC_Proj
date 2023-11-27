@@ -144,8 +144,18 @@ unsigned long get_time(){
 }
 
 // Main Driver for Testing
-int main()
+int main(int argc, char** argv)
 {
+    // Check for correct number of arguments
+    if (argc < 3) {
+        cerr << "Usage: " << argv[0] << " fft_type print_option\n";
+        return 1;
+    }
+
+    // Parse arguments
+    string fft_type = argv[1]; // "custom" or "fftw" or "both"
+    string print_option = argv[2]; // "yes" or "no"
+
     unsigned int N = 16;
     // randomize a vector
     // vec      : base vec
@@ -158,34 +168,72 @@ int main()
     Complex *vec_cpy = (Complex*)malloc(N * sizeof(Complex));
     copy_vec(vec, vec_cpy, N);
 
-    // ####### FFT standard
-    // create input and output vectors for FFTW using stack allocation
-    fftw_complex vec_in[N], vec_out[N];
-    Complex2fftw(vec, vec_in, N);
 
-    // Creating plan for 1D FFT in FFTW
-    fftw_plan p;
-    p = fftw_plan_dft_1d(N, vec_in, vec_out, FFTW_FORWARD, FFTW_ESTIMATE);
-    fftw_execute(p); 
+    if (fft_type == "custom") {
+        // Run custom FFT
+        fft(vec_cpy, N);
 
-    // Convert to Complex dtype
-    fftw2Complex(vec_out, vec_fftw, N);
+        if (print_option == "yes") {
+            //cout << "FFT result by CT Method:" << endl;
+            show_vec(vec_cpy, N);
+        }
+    } 
+    
+    else if (fft_type == "fftw") {
+        // Run FFTW
+        fftw_complex vec_in[N], vec_out[N];
+        Complex2fftw(vec, vec_in, N);
 
-    fftw_destroy_plan(p);
+        fftw_plan p = fftw_plan_dft_1d(N, vec_in, vec_out, FFTW_FORWARD, FFTW_ESTIMATE);
+        fftw_execute(p);
 
-    // ####### FFT CT Method
-    fft(vec_cpy, N);
+        Complex *vec_fftw = (Complex*)malloc(N * sizeof(Complex));
+        fftw2Complex(vec_out, vec_fftw, N);
 
-    // Show both vecs
-    cout << "FFT result by standard library:" << endl;
-    show_vec(vec_fftw, N);
+        if (print_option == "yes") {
+            //cout << "FFT result by standard library:" << endl;
+            show_vec(vec_fftw, N);
+        }
 
-    cout << "FFT result by CT Method:" << endl;
-    show_vec(vec_cpy, N);
+        fftw_destroy_plan(p);
+        free(vec_fftw);
+    } 
+    
+    else if (fft_type == "both") {
+        // ####### FFT standard
+        // create input and output vectors for FFTW using stack allocation
+        fftw_complex vec_in[N], vec_out[N];
+        Complex2fftw(vec, vec_in, N);
+
+        // Creating plan for 1D FFT in FFTW
+        fftw_plan p;
+        p = fftw_plan_dft_1d(N, vec_in, vec_out, FFTW_FORWARD, FFTW_ESTIMATE);
+        fftw_execute(p); 
+
+        // Convert to Complex dtype
+        fftw2Complex(vec_out, vec_fftw, N);
+
+        fftw_destroy_plan(p);
+
+        // ####### FFT CT Method
+        fft(vec_cpy, N);
+
+        // Show both vecs
+        //cout << "FFT result by standard library:" << endl;
+        show_vec(vec_fftw, N);
+
+        //cout << "FFT result by CT Method:" << endl;
+        show_vec(vec_cpy, N);
+    } 
+    
+    else {
+        std::cerr << "Invalid FFT type. Use 'custom' or 'fftw'.\n";
+        return 1;
+    }
 
     // Check if two vecs are equal 
-    cout << boolalpha;
-    cout << "Are FFT results the same?: " << bool(areVecsEqual(vec_fftw, vec_cpy, N)) << endl;
+    // cout << boolalpha;
+    // cout << "Are FFT results the same?: " << bool(areVecsEqual(vec_fftw, vec_cpy, N)) << endl;
     
     // free memory
     free(vec);
