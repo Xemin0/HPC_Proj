@@ -1,5 +1,6 @@
 ## File Structure
 **Each folder has (and will have) its respective `readme` describing what type of modules should be placed inside**
+- Data Files should be placed in `./FFT/Data/` 
 
 ## Prerequisite
 - [FFTW C/C++ library](https://www.fftw.org/) for validating the results (not necessary)
