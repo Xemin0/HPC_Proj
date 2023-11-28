@@ -17,7 +17,7 @@ using namespace std;
 
 
 // Constructor 
-Dataset::Dataset(const std::string& dataFilename, const std::string& dimFilename){
+Dataset1D::Dataset1D(const std::string& dataFilename, const std::string& dimFilename){
     // Load data along with dimensions from files in ../Data
 
     // Read dimensions 
@@ -47,7 +47,7 @@ Dataset::Dataset(const std::string& dataFilename, const std::string& dimFilename
 }
 
 
-Dataset::~Dataset()
+Dataset1D::~Dataset1D()
 {
     delete[] data;
     delete[] cdata;
@@ -56,12 +56,13 @@ Dataset::~Dataset()
 
 
 // Accesoor for the dimensions
-void Dataset::getDimensions(int& r, int& c, int& d) const{
+void Dataset1D::getDimensions(int& r, int& c, int& d) const{
     r = rows; c = cols; d = depth;
 }
 
 // Get an element from the dataset (long vector) 
-complex<double> Dataset::getElement(unsigned int i, unsigned int j, unsigned int k, bool isComplex) const{
+complex<double> Dataset1D::getElement(unsigned int i, unsigned int j, unsigned int k, 
+                                    bool isFFT) const{
     if (i < 1 || i > rows || j < 1 || j > cols || k < 1 || k > depth)
         throw out_of_range("Index out of range.");
 
@@ -72,11 +73,21 @@ complex<double> Dataset::getElement(unsigned int i, unsigned int j, unsigned int
     int zeroBasedJ = j - 1;
     int zeroBasedK = k - 1;
 
-    if (isComplex)
-        return cdata[zeroBasedK * (rows * cols) + zeroBasedJ * rows + zeroBasedI];
+    if (isFFT)
+        return fft_data[zeroBasedK * (rows * cols) + zeroBasedJ * rows + zeroBasedI];
     else
-        return data[zeroBasedK * (rows * cols) + zeroBasedJ * rows + zeroBasedI];
-        
+        return cdata[zeroBasedK * (rows * cols) + zeroBasedJ * rows + zeroBasedI];
 }
 
+// Set an element
+void Dataset1D::setElement(complex<double> val, unsigned int i, unsigned int j, unsigned int k, bool isFFT)
+{
+    if (i < 1 || i > rows || j < 1 || j > cols || k < 1 || k > depth)
+        throw out_of_range("Index out of range.");
+
+    if (isFFT)
+        fft_data[(k-1) * (rows * cols) + (j-1) * rows + (i-1)] = val;
+    else
+        cdata[(k-1) * (rows * cols) + (j-1) * rows + (i-1)] = val;
+} 
 
