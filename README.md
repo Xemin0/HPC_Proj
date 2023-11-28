@@ -28,4 +28,4 @@ In the `./FFT/` folder use the bash command `make`
 
 ## TO-DOS
 - ~Generalize `./eval/eval_correctness.cpp` subroutines to take function pointers as its parameter~
-- Implement subroutines to evaluate performances (time evalution of execution)
+- ~Implement subroutines to evaluate performances (time evalution of execution)~

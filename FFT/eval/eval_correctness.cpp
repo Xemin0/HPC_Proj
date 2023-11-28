@@ -25,7 +25,7 @@ void FFT1d_4Data(Dataset& ds, FuncPtr func,
 				 bool toFile, std::string filename)
 {
  	/*
-     * Performance of FFT for a given Dataset in microsecond (us)
+     * Correctness of FFT for a given Dataset 
      * 
      * - FuncPtr: Function pointer of FFT method
 	 * 			  in the form of `void func(Complex *x, int N)` 

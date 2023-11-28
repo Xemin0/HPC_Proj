@@ -1,5 +1,7 @@
 /*
  * Loading Data from the specified path
+ *
+ **** Matrix Data output from Matlab is stored in a Column-major fassion ****
  */
 
 #ifndef LIB_LOADER_H_
