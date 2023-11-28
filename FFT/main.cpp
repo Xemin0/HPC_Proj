@@ -9,12 +9,14 @@
 #include <cmath>
 #include <fstream>
 
-#include "./lib/fftw_wrapper.h"
-#include "./lib/iterative_CT.h"
+#include "./lib/fftw_wrapper.h" // FFTW method wrapper
+#include "./lib/iterative_CT.h" // iterative FFT
+#include "./lib/recursive_CT.h" // recursive FFt
 #include "./lib/loader.h" // DataLoader
-#include "./lib/vec_utils.h"
-#include "./lib/eval_correctness.h"
-#include "./lib/timer.h"
+#include "./lib/vec_utils.h" // vector manipulations
+#include "./lib/eval_correctness.h" // subroutines to verify correctness
+#include "./lib/eval_performance.h" // subroutines to measure performance
+#include "./lib/timer.h"	// timer
 using namespace std;
 
 typedef std::complex<double> Complex;
@@ -23,6 +25,7 @@ typedef std::complex<double> Complex;
 // Main Driver for Testing
 int main()
 {
+	/*
     unsigned int N = 16;
     // randomize a vector
     // vec      : base vec
@@ -61,6 +64,7 @@ int main()
     // free memory
     free(vec);
     free(vec_fftw);
+	*/
 
 
     // ******** Testing Given Data set ******* // 
@@ -69,6 +73,7 @@ int main()
 	 * Available 1D FFT methods available for testing:
 	 *
 	 * 		- fft_it_1d 		: 1D FFT Iterative Method
+	 *	 	- fft_re_1d			: 1D FFT Recursive Method
 	 * 		- fftw_1d_wrapper	: 1D FFT method from FFTW
 	 *		- 
 	 */
@@ -76,16 +81,44 @@ int main()
     // Load Data
     Dataset finger1;
 
+	//******** Validating the Correctness ********//
+
+
+	/*
     // Eval the Correctness of Iterative 1D FFT and output to a file
     FFT1d_4Data(finger1, // Dataset
 				fft_it_1d, // FFT method to test
                 true, // if write toFile
                 "our1d_it.txt");// filename
     
+    // Eval the Correctness of FFTW's 1D FFT and output to a file
     FFT1d_4Data(finger1, // Dataset
 				fftw_1d_wrapper, // FFT method to test
                 true, // if write toFile
                 "our1d_fftw.txt");// filename
+
+    // Eval the Correctness of Recursive 1D FFT and output to a file
+    FFT1d_4Data(finger1, // Dataset
+				fft_re_1d, // FFT method to test
+                true, // if write toFile
+                "our1d_re.txt");// filename
+
+	*/
+	//*********************************************//
+
+
+	//******** Evaluate the Performance ********//
+	
+	// Eval the Average Time Performing Iterative 1D FFT and output to a file
+	eval_FFT1d_4Data(finger1,	// Dataset
+					 fft_it_1d, // FFT method to test
+					 2,			// warm up runs (excluded in eval)
+					 5,			// testruns to take the average of
+					 true,		// if write to file
+					 "our1d_iter"); // base filename
+
+
+	//*********************************************//
     //fftw_free(vec_in);
     //fftw_free(vec_out); // no need to reclaim memory for stack allocation
 }
