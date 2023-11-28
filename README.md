@@ -1,3 +1,5 @@
+# Parallelizing 2D Fast-Fourier Transform Implemented with Cooley-Tukey Algorithm
+
 ## File Structure
 **Each folder has (and will have) its respective `readme` describing what type of modules should be placed inside**
 
@@ -27,5 +29,10 @@ In the `./FFT/` folder use the bash command `make`
 `./It_CT.out`
 
 ## TO-DOS
+### 1D FFT
 - ~Generalize `./eval/eval_correctness.cpp` subroutines to take function pointers as its parameter~
 - ~Implement subroutines to evaluate performances (time evalution of execution)~
+
+### 2D FFT
+
+### `OpenMP` v.s. `MPI` v.s. `CUDA`
