@@ -16,10 +16,10 @@
 
 typedef void (*FuncPtr)(Complex*, int);
 
-unsigned long time_FFT1d_4Data(Dataset& ds, FuncPtr func = fft_it_1d);
+unsigned long time_FFT1d_4Data(Dataset1D& ds, FuncPtr func = fft_it_1d);
 // Time a single run of provided FFT method over the whole dataset in microsecond(us)
 
-unsigned long eval_FFT1d_4Data(Dataset& ds, FuncPtr func = fft_it_1d,
+unsigned long eval_FFT1d_4Data(Dataset1D& ds, FuncPtr func = fft_it_1d,
 					  int warmup = 2, int testruns = 5,
 				 	  bool toFile = true, std::string filename = "our1d_iter");
 // Average Time of 1D FFT methods on the whole Data in microsecond (us)

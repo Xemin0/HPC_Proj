@@ -11,24 +11,27 @@
 //#include <string>
 
 
-class Dataset {
+class Dataset1D {
 private:
     double *data; // column major storage
     int rows, cols, depth;
     std::complex<double> *cdata;  // Column major storage
+    std::complex<double> *fft_data;  // Column major storage
 
 public:
-    std::complex<double> *fft_data;  // Column major storage
     // Constructor 
-    Dataset(const std::string& dataFilename = "./Data/finger1_data.bin", const std::string& dimFilename = "./Data/finger1_dimensions.txt");
+    Dataset1D(const std::string& dataFilename = "./Data/finger1_data.bin", const std::string& dimFilename = "./Data/finger1_dimensions.txt");
     // Load data along with dimensions from files in ../Data
 
-    ~Dataset();
+    ~Dataset1D();
 
     // Accesoor for the dimensions
     void getDimensions(int& r, int& c, int& d) const;
 
     // Get an element from the dataset (long vector) 
-    std::complex<double> getElement(unsigned int i, unsigned int j, unsigned int k, bool isComplex = true) const;
+    std::complex<double> getElement(unsigned int i, unsigned int j, unsigned int k, bool isFFT = false) const;
+
+    // Set an element
+    void setElement(std::complex<double> val, unsigned int i, unsigned int j, unsigned int k, bool isFFT = true);
 };
 #endif // LIB_LOADER_H_
