@@ -79,21 +79,20 @@ int main()
 	 */
 
     // Load Data
-    Dataset finger1;
+    Dataset1D finger1;
 
 	//******** Validating the Correctness ********//
 
 
-	/*
     // Eval the Correctness of Iterative 1D FFT and output to a file
     FFT1d_4Data(finger1, // Dataset
 				fft_it_1d, // FFT method to test
                 true, // if write toFile
                 "our1d_it.txt");// filename
-    
+    /*
     // Eval the Correctness of FFTW's 1D FFT and output to a file
     FFT1d_4Data(finger1, // Dataset
-				fftw_1d_wrapper, // FFT method to test
+                fftw_1d_wrapper, // FFT method to test
                 true, // if write toFile
                 "our1d_fftw.txt");// filename
 

@@ -21,7 +21,7 @@ typedef complex<double> Complex;
 // Define the function pointer
 typedef void (*FuncPtr)(Complex*, int);
 
-void FFT1d_4Data(Dataset& ds, FuncPtr func, 
+void FFT1d_4Data(Dataset1D& ds, FuncPtr func, 
 				 bool toFile, std::string filename)
 {
  	/*
@@ -71,10 +71,8 @@ void FFT1d_4Data(Dataset& ds, FuncPtr func,
 
             // Write Our result to the output array 
             // Column Major
-			// ## may need to write a method to set values for a set of specified indices
-			// ## while making ds.fft_data private
             for (int j = 0; j < truncated_cols; j++)
-                ds.fft_data[k * rows * truncated_cols + j * rows + i] = tmp[j];
+                ds.setElement(tmp[j], i+1, j+1, k+1, true); // true: set element for ds.fft_data
             
             // store the result for current channel
             if (toFile)      

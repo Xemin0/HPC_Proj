@@ -12,7 +12,7 @@
 
 typedef void (*FuncPtr)(Complex*, int);
 
-void FFT1d_4Data(Dataset& ds, FuncPtr func = fft_it_1d,
+void FFT1d_4Data(Dataset1D& ds, FuncPtr func = fft_it_1d,
 				 bool toFile = true, std::string filename = "our1d_iter.txt");
 // Testing 1D FFT methods on loaded Data
 

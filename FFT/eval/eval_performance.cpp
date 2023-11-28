@@ -27,7 +27,7 @@ typedef complex<double> Complex;
 // Define the function pointer
 typedef void (*FuncPtr)(Complex*, int);
 
-unsigned long time_FFT1d_4Data(Dataset& ds, FuncPtr func)
+unsigned long time_FFT1d_4Data(Dataset1D& ds, FuncPtr func)
 {
 	/*
 	 * Time a single run of provided FFT method over the whole dataset
@@ -66,7 +66,7 @@ unsigned long time_FFT1d_4Data(Dataset& ds, FuncPtr func)
 	return tot_time; 
 }
 
-unsigned long eval_FFT1d_4Data(Dataset& ds, FuncPtr func, 
+unsigned long eval_FFT1d_4Data(Dataset1D& ds, FuncPtr func, 
 					  int warmup, int testruns,
 					  bool toFile, std::string filename)
 {
