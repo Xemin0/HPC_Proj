@@ -19,13 +19,20 @@ typedef std::complex<double> Complex;
  * `reinterpret_cast<fftw_complex*>` recommended
  */
 void fftw2Complex(fftw_complex *arr, Complex *x, unsigned int N);
+// for 1D array
 
 void Complex2fftw(Complex *x, fftw_complex *arr, unsigned int N);
+// for 1D array
 
 // ### FFTW Methods Wrappers
 
 // 1D - FFT from FFTW
 void fftw_1d_wrapper(Complex *x, int N);
 
+// 2D - FFT from FFTW
+// #### For 2D input #### //
+void fftw_2d_wrapper(Complex **img, int rows, int cols);
+
+// !!!! MAY NEED A OVERLOAD FOR FLATTENED 1D INPUT !!!! //
 
 #endif /* LIB_FFTW_WRAPPER_H_ */
