@@ -144,6 +144,13 @@ template double* flatten_col_major<double>(double**, int, int);
 template double getEntry_row_major<double>(double*, int, int, int, int);
 template double getEntry_col_major<double>(double*, int, int, int, int);
 
+// int
+template void show_vec<int>(int*, unsigned int);
+template void copy_vec<int>(int*, int*, unsigned int);
+template int* flatten_row_major<int>(int**, int, int);
+template int* flatten_col_major<int>(int**, int, int);
+template int getEntry_row_major<int>(int*, int, int, int, int);
+template int getEntry_col_major<int>(int*, int, int, int, int);
 
 // ***************************//
 
