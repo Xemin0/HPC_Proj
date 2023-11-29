@@ -13,10 +13,10 @@
 
 class Dataset1D {
 private:
-    double *data; // column major storage
+    double *data; // column major storage from Matlab
     int rows, cols, depth;
-    std::complex<double> *cdata;  // Column major storage
-    std::complex<double> *fft_data;  // Column major storage
+    std::complex<double> *cdata;  // Column major storage; Complex version of Data
+    std::complex<double> *fft_data;  // Column major storage; FFTed Data
 
 public:
     // Constructor 
@@ -29,9 +29,11 @@ public:
     void getDimensions(int& r, int& c, int& d) const;
 
     // Get an element from the dataset (long vector) 
+    // indices i, j, k starting from 1 to agree with that from Matlab
     std::complex<double> getElement(unsigned int i, unsigned int j, unsigned int k, bool isFFT = false) const;
 
     // Set an element
+    // indices i, j, k starting from 1 to agree with that from Matlab
     void setElement(std::complex<double> val, unsigned int i, unsigned int j, unsigned int k, bool isFFT = true);
 };
 #endif // LIB_LOADER_H_

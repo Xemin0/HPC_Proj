@@ -44,12 +44,12 @@ template <typename T>
 T* flatten_col_major(T** array2D, int rows, int cols);
 
 template <typename T>
-T getEntry_row_major(T* arr, int rows, int cols,
-                     int rowIdx, int colIdx);
+T getEntry_row_major(T* mat, int rows, int cols,
+                     int rowIdx, int colIdx) const;
 
 template <typename T>
-T getEntry_col_major(T* arr, int rows, int cols,
-                     int rowIdx, int colIdx);
+T getEntry_col_major(T* mat, int rows, int cols,
+                     int rowIdx, int colIdx) const;
 
 
 #endif /* LIB_VEC_UTILS_H_*/

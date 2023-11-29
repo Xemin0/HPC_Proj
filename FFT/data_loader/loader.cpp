@@ -61,6 +61,7 @@ void Dataset1D::getDimensions(int& r, int& c, int& d) const{
 }
 
 // Get an element from the dataset (long vector) 
+// indices i, j, k starting from 1 to agree with that from Matlab
 complex<double> Dataset1D::getElement(unsigned int i, unsigned int j, unsigned int k, 
                                     bool isFFT) const{
     if (i < 1 || i > rows || j < 1 || j > cols || k < 1 || k > depth)
@@ -80,6 +81,7 @@ complex<double> Dataset1D::getElement(unsigned int i, unsigned int j, unsigned i
 }
 
 // Set an element
+// indices i, j, k starting from 1 to agree with that from Matlab
 void Dataset1D::setElement(complex<double> val, unsigned int i, unsigned int j, unsigned int k, bool isFFT)
 {
     if (i < 1 || i > rows || j < 1 || j > cols || k < 1 || k > depth)
