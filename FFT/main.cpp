@@ -87,7 +87,7 @@ int main()
 
     // Load Data
     Dataset1D finger1;
-    Dataset2D cifar10;
+    //Dataset2D cifar10;
 
 	//******** Validating the Correctness of 1D ********//
 
