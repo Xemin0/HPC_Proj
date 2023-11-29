@@ -81,7 +81,8 @@ void fftw_2d_wrapper(Complex **img, int rows, int cols)
 
     // Creating plan for 2D FFT in FFTW
     fftw_plan p;
-    p = fftw_plan_dft_2d(rows, cols, mat_in, mat_out, FFTW_FORWARD, FFTW_ESTIMATE);
+    p = fftw_plan_dft_2d(rows, cols, mat_in, mat_out,
+                         FFTW_FORWARD, FFTW_ESTIMATE);
     fftw_execute(p);
 
     // Copy the output back to input img
@@ -92,5 +93,32 @@ void fftw_2d_wrapper(Complex **img, int rows, int cols)
     // clean up
     fftw_destroy_plan(p);
     fftw_free(mat_in);
+    fftw_free(mat_out);
+}
+
+// !!!! MAY NEED AN OVERLOAD FOR FLATTENED 1D INPUT !!!! // 
+// #### For flattened 1D row-major input #### //
+void fftw_2d_wrapper(Complex *img, int rows, int cols)
+{
+    /*
+     * Wrapper for 2D FFT call from FFTW library
+     */
+
+    fftw_complex *mat_in, *mat_out;
+    // reinterpret the memory storage instead of allocating new memory
+    mat_in = reinterpret_cast<fftw_complex*>(img); 
+    mat_out = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * rows * cols);
+
+    // Creating plan for 2D FFT in FFTW
+    fftw_plan p;
+    p = fftw_plan_dft_2d(rows, cols, mat_in, mat_out,
+                         FFTW_FORWARD, FFTW_ESTIMATE);
+    fftw_execute(p);
+
+    // Convert to Complex dtype
+    fftw2Complex(mat_out, img, rows * cols);
+
+    // Clean up 
+    fftw_destroy_plan(p);
     fftw_free(mat_out);
 }

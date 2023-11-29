@@ -10,9 +10,14 @@
 
 typedef std::complex<double> Complex;
 
-void show_vec(Complex *vec, unsigned int N);
+// ** The Use of Template Requires Explicit Instantiation after Function Definitions ** //
+// check the corresponding .cpp file : "../utils/vec_utils.cpp"
 
-void copy_vec(Complex *vec1, Complex *vec2, unsigned int N);
+template <typename T>
+void show_vec(T *vec, unsigned int N);
+
+template <typename T>
+void copy_vec(T *vec1, T *vec2, unsigned int N);
 // Copy vec1 into vec2
 
 Complex* rand_vec(unsigned int N, double lower_bound = -100, double upper_bound = 100);
@@ -27,5 +32,24 @@ Complex* rand_vec(unsigned int N, double lower_bound = -100, double upper_bound 
 
 bool areVecsEqual(Complex *a, Complex *b, int N, const double tol = 1e-6);
 // check if two complex vecs are equal within the given tolerance level
+
+
+//********************************//
+// Matrix - Vector Transformation Methods //
+
+template <typename T>
+T* flatten_row_major(T** array2D, int rows, int cols);
+
+template <typename T>
+T* flatten_col_major(T** array2D, int rows, int cols);
+
+template <typename T>
+T getEntry_row_major(T* arr, int rows, int cols,
+                     int rowIdx, int colIdx);
+
+template <typename T>
+T getEntry_col_major(T* arr, int rows, int cols,
+                     int rowIdx, int colIdx);
+
 
 #endif /* LIB_VEC_UTILS_H_*/

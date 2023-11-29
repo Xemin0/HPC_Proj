@@ -33,6 +33,9 @@ void fftw_1d_wrapper(Complex *x, int N);
 // #### For 2D input #### //
 void fftw_2d_wrapper(Complex **img, int rows, int cols);
 
-// !!!! MAY NEED A OVERLOAD FOR FLATTENED 1D INPUT !!!! //
+// !!!! MAY NEED AN OVERLOAD FOR FLATTENED 1D INPUT !!!! //
+// 2D - FFT from FFTW
+// #### For flattened 1D row-major input #### //
+void fftw_2d_wrapper(Complex *img, int rows, int cols);
 
 #endif /* LIB_FFTW_WRAPPER_H_ */
