@@ -1,3 +1,6 @@
 ## Data Loader 
 
 Reading data from a specified path (root path at ./Data folder) as an Dataset class object
+
+- 1D Data (finger data)
+- 2D Data (CIFAR10)

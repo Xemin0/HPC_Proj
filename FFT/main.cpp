@@ -67,7 +67,7 @@ int main()
 	*/
 
 
-    // ******** Testing Given Data set ******* // 
+    // ******** Testing Given DataSet ******* // 
 
 	/*
 	 * Available 1D FFT methods available for testing:
@@ -76,14 +76,22 @@ int main()
 	 *	 	- fft_re_1d			: 1D FFT Recursive Method
 	 * 		- fftw_1d_wrapper	: 1D FFT method from FFTW
 	 *		- 
+     *
+     *
+	 * Available 2D FFT methods available for testing:
+     * 
+     *      - fft2d             : 2D FFT
+     *      - fftw_2d_wrapper   : 2D FFT method from FFTW
+     *      - 
 	 */
 
     // Load Data
     Dataset1D finger1;
     Dataset2D cifar10;
 
-	//******** Validating the Correctness ********//
+	//******** Validating the Correctness of 1D ********//
 
+    // ************* 1D FFT *************** //
 
     // Eval the Correctness of Iterative 1D FFT and output to a file
     FFT1d_4Data(finger1, // Dataset
@@ -104,11 +112,17 @@ int main()
                 "our1d_re.txt");// filename
 
 	*/
-	//*********************************************//
+
+    // ************* 2D FFT *************** //
+
+
+	//*********************************************************//
 
 
 	//******** Evaluate the Performance ********//
 	
+    // ************* 1D FFT *************** //
+
 	// Eval the Average Time Performing Iterative 1D FFT and output to a file
 	eval_FFT1d_4Data(finger1,	// Dataset
 					 fft_it_1d, // FFT method to test
@@ -118,7 +132,12 @@ int main()
 					 "our1d_iter"); // base filename
 
 
-	//*********************************************//
+    // ************* 2D FFT *************** //
+
+
+
+
+	//*********************************************************//
     //fftw_free(vec_in);
     //fftw_free(vec_out); // no need to reclaim memory for stack allocation
 
