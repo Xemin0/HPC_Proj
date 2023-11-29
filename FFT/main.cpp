@@ -87,6 +87,7 @@ int main()
 
     // Load Data
     Dataset1D finger1;
+    Dataset2D cifar10;
 
 	//******** Validating the Correctness of 1D ********//
 
@@ -139,4 +140,42 @@ int main()
 	//*********************************************************//
     //fftw_free(vec_in);
     //fftw_free(vec_out); // no need to reclaim memory for stack allocation
+
+
+
+    // ********** Testing 2D DataLoader *********//
+    /*
+    // Test getting an image
+    int imageIndex = 0;
+    auto originalImage = dataset.getImage(imageIndex);
+
+    // Modify the image - for example, set all pixels to a specific grayscale value
+    complex<double>** modifiedImage = new complex<double>*[32];
+    for (int i = 0; i < 32; ++i) {
+        modifiedImage[i] = new complex<double>[32];
+        for (int j = 0; j < 32; ++j) {
+            modifiedImage[i][j] = complex<double>(50, 0); // Set to grayscale value 50
+        }
+    }
+    // Set the modified image in the dataset
+    dataset.setImage(imageIndex, modifiedImage, false);
+    // Retrieve the modified image to verify changes
+    std::complex<double>** retrievedImage = dataset.getImage(imageIndex);
+    // Print out some pixel values to verify the change
+    std::cout << "Original and Modified Image Pixel Values:" << std::endl;
+    for (int i = 0; i < 5; ++i) {
+        std::cout << "Pixel " << i << ": " << originalImage[i / 32][i % 32].real() 
+        << ", " << retrievedImage[i / 32][i % 32].real() << std::endl;
+    }
+    // Cleanup dynamically allocated memory
+    for (int i = 0; i < 32; ++i) {
+        delete[] originalImage[i];
+        delete[] modifiedImage[i];
+        delete[] retrievedImage[i];
+    }
+    delete[] originalImage;
+    delete[] modifiedImage;
+    delete[] retrievedImage;
+    */
+    //*********************************************//
 }
