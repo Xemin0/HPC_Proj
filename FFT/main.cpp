@@ -12,11 +12,18 @@
 #include "./lib/fftw_wrapper.h" // FFTW method wrapper
 #include "./lib/iterative_CT.h" // iterative FFT
 #include "./lib/recursive_CT.h" // recursive FFt
+<<<<<<< HEAD
+#include "./lib/fft2d.h"        // 2D FFT
+#include "./lib/loader.h"       // DataLoader
+#include "./lib/vec_utils.h"    // vector manipulations
+=======
+#include "./lib/fft2d.h" // FFTW method wrapper
 #include "./lib/loader.h" // DataLoader
 #include "./lib/vec_utils.h" // vector manipulations
+>>>>>>> merielyn
 #include "./lib/eval_correctness.h" // subroutines to verify correctness
 #include "./lib/eval_performance.h" // subroutines to measure performance
-#include "./lib/timer.h"	// timer
+#include "./lib/timer.h"	    // timer
 using namespace std;
 
 typedef std::complex<double> Complex;
@@ -67,7 +74,7 @@ int main()
 	*/
 
 
-    // ******** Testing Given Data set ******* // 
+    // ******** Testing Given DataSet ******* // 
 
 	/*
 	 * Available 1D FFT methods available for testing:
@@ -76,19 +83,28 @@ int main()
 	 *	 	- fft_re_1d			: 1D FFT Recursive Method
 	 * 		- fftw_1d_wrapper	: 1D FFT method from FFTW
 	 *		- 
+     *
+     *
+	 * Available 2D FFT methods available for testing:
+     * 
+     *      - fft2d             : 2D FFT
+     *      - fftw_2d_wrapper   : 2D FFT method from FFTW
+     *      - 
 	 */
 
     // Load Data
     Dataset1D finger1;
+    Dataset2D cifar10;
 
-	//******** Validating the Correctness ********//
+	//******** Validating the Correctness of 1D ********//
 
+    // ************* 1D FFT *************** //
 
     // Eval the Correctness of Iterative 1D FFT and output to a file
-    FFT1d_4Data(finger1, // Dataset
-				fft_it_1d, // FFT method to test
-                true, // if write toFile
-                "our1d_it.txt");// filename
+    // FFT1d_4Data(finger1, // Dataset
+	// 			fft_it_1d, // FFT method to test
+    //             true, // if write toFile
+    //             "our1d_it.txt");// filename
     /*
     // Eval the Correctness of FFTW's 1D FFT and output to a file
     FFT1d_4Data(finger1, // Dataset
@@ -103,21 +119,85 @@ int main()
                 "our1d_re.txt");// filename
 
 	*/
-	//*********************************************//
+
+    // ************* 2D FFT *************** //
+    FFT2d_4Data(cifar10,
+                fftw_2d_wrapper,
+                true,
+                "out2d_fftw.txt");
+
+    FFT2d_4Data(cifar10,
+                fft_2d,
+                true,
+                "out2d_custom.txt");
+
+	//*********************************************************//
 
 
 	//******** Evaluate the Performance ********//
 	
+    // ************* 1D FFT *************** //
+
 	// Eval the Average Time Performing Iterative 1D FFT and output to a file
-	eval_FFT1d_4Data(finger1,	// Dataset
-					 fft_it_1d, // FFT method to test
+	// eval_FFT1d_4Data(finger1,	// Dataset
+	// 				 fft_it_1d, // FFT method to test
+	// 				 2,			// warm up runs (excluded in eval)
+	// 				 5,			// testruns to take the average of
+	// 				 true,		// if write to file
+	// 				 "our1d_iter"); // base filename
+
+
+    // ************* 2D FFT *************** //
+
+	// Eval the Average Time Performing Iterative 1D FFT and output to a file
+	eval_FFT2d_4Data(cifar10,	// Dataset
+					 fft_2d,     // FFT method to test
 					 2,			// warm up runs (excluded in eval)
 					 5,			// testruns to take the average of
 					 true,		// if write to file
-					 "our1d_iter"); // base filename
+					 "our2d");  // base filename
 
 
-	//*********************************************//
+
+	//*********************************************************//
     //fftw_free(vec_in);
     //fftw_free(vec_out); // no need to reclaim memory for stack allocation
+
+
+
+    // ********** Testing 2D DataLoader *********//
+    /*
+    // Test getting an image
+    int imageIndex = 0;
+    auto originalImage = dataset.getImage(imageIndex);
+
+    // Modify the image - for example, set all pixels to a specific grayscale value
+    complex<double>** modifiedImage = new complex<double>*[32];
+    for (int i = 0; i < 32; ++i) {
+        modifiedImage[i] = new complex<double>[32];
+        for (int j = 0; j < 32; ++j) {
+            modifiedImage[i][j] = complex<double>(50, 0); // Set to grayscale value 50
+        }
+    }
+    // Set the modified image in the dataset
+    dataset.setImage(imageIndex, modifiedImage, false);
+    // Retrieve the modified image to verify changes
+    std::complex<double>** retrievedImage = dataset.getImage(imageIndex);
+    // Print out some pixel values to verify the change
+    std::cout << "Original and Modified Image Pixel Values:" << std::endl;
+    for (int i = 0; i < 5; ++i) {
+        std::cout << "Pixel " << i << ": " << originalImage[i / 32][i % 32].real() 
+        << ", " << retrievedImage[i / 32][i % 32].real() << std::endl;
+    }
+    // Cleanup dynamically allocated memory
+    for (int i = 0; i < 32; ++i) {
+        delete[] originalImage[i];
+        delete[] modifiedImage[i];
+        delete[] retrievedImage[i];
+    }
+    delete[] originalImage;
+    delete[] modifiedImage;
+    delete[] retrievedImage;
+    */
+    //*********************************************//
 }

@@ -4,8 +4,13 @@
 
 # Compiler and flags ### g++ or g++-13
 CXX = g++
+#CXXFLAGS = -Wall -std=c++11 -I/opt/homebrew/Cellar/fftw/3.3.10_1/include
+#LDFLAGS = -L/opt/homebrew/Cellar/fftw/3.3.10_1/lib -lfftw3
+
 CXXFLAGS = -Wall -std=c++11 -I/usr/local/Cellar/fftw/3.3.10_1/include
 LDFLAGS = -L/usr/local/Cellar/fftw/3.3.10_1/lib -lfftw3
+
+
 
 
 # Directories ## Add more dir for modules
@@ -21,6 +26,7 @@ SOURCES = $(SRC_DIR)/main.cpp \
           $(CT_DIR)/iterative_CT.cpp \
           $(CT_DIR)/recursive_CT.cpp \
           $(CT_DIR)/fftw_wrapper.cpp \
+		  $(CT_DIR)/fft2d.cpp \
           $(DL_DIR)/loader.cpp \
           $(UTILS_DIR)/timer.cpp \
 		  $(UTILS_DIR)/vec_utils.cpp \
@@ -36,7 +42,7 @@ EXEC = It_CT.out
 # Default target
 all: $(EXEC)
 	@echo "Build Successful!"
-	rm -f $(OBJECTS) # Remove intermediate .o files
+	rm -f $(OBJECTS) 		# Remove intermediate .o files
 
 # // Linking
 $(EXEC): $(OBJECTS)
@@ -54,9 +60,10 @@ clean:
 $(CT_DIR)/iterative_CT.o: $(LIB_DIR)/iterative_CT.h # Iterative method
 $(CT_DIR)/recursive_CT.o: $(LIB_DIR)/recursive_CT.h # Recursive method
 $(CT_DIR)/fftw_wrapper.o: $(LIB_DIR)/fftw_wrapper.h # FFTW wrapper
+$(CT_DIR)/fft2d.o: $(LIB_DIR)/fft2d.h				# 2D FFT
 $(DL_DIR)/loader.o: $(LIB_DIR)/loader.h 			# Data loader
 $(UTILS_DIR)/timer.o: $(LIB_DIR)/timer.h 			# CPU/GPU timer
 $(UTILS_DIR)/vec_utils.o: $(LIB_DIR)/vec_utils.h	# Vector manipulations
 $(EVAL_DIR)/eval_correctness.o: $(LIB_DIR)/eval_correctness.h	# Validation of Correctness
 $(EVAL_DIR)/eval_performance.o: $(LIB_DIR)/eval_performance.h	# Validation of Performance
-$(SRC_DIR)/main.o: $(LIB_DIR)/loader.h $(LIB_DIR)/iterative_CT.h $(LIB_DIR)/recursive_CT.h $(LIB_DIR)/timer.h $(LIB_DIR)/fftw_wrapper.h $(LIB_DIR)/vec_utils.h $(LIB_DIR)/eval_correctness.h $(LIB_DIR)/eval_performance.h
+$(SRC_DIR)/main.o: $(LIB_DIR)/loader.h $(LIB_DIR)/timer.h $(LIB_DIR)/vec_utils.h $(LIB_DIR)/eval_correctness.h $(LIB_DIR)/eval_performance.h $(LIB_DIR)/iterative_CT.h $(LIB_DIR)/recursive_CT.h $(LIB_DIR)/fftw_wrapper.h $(LIB_DIR)/fft2d.h

@@ -21,13 +21,16 @@ typedef complex<double> Complex;
 // Define the function pointer
 typedef void (*FuncPtr)(Complex*, int);
 
+// Define the function pointer for 2D FFT functionalities
+typedef void (*FuncPtr2)(Complex**, int, int);
+
 void FFT1d_4Data(Dataset1D& ds, FuncPtr func, 
 				 bool toFile, std::string filename)
 {
  	/*
      * Correctness of FFT for a given Dataset 
      * 
-     * - FuncPtr: Function pointer of FFT method
+     * - FuncPtr: Function pointer of 1D FFT method
 	 * 			  in the form of `void func(Complex *x, int N)` 
      */
 
@@ -84,3 +87,75 @@ void FFT1d_4Data(Dataset1D& ds, FuncPtr func,
     fftFile.close();
     delete[] tmp;
 }
+
+
+void FFT2d_4Data(Dataset2D& ds, FuncPtr2 func, 
+				 bool toFile, std::string filename)
+{
+ 	/*
+     * Correctness of FFT for a given 2D Dataset 
+     * 
+     * - FuncPtr: Function pointer of 2D FFT method
+	 * 			  in the form of `void func(Complex **x, int rows, int cols)` 
+     */
+
+	std::string root_path = "./Data/Results/";
+
+    int rows, cols, numImages;   
+    ds.getDimensions(rows, cols, numImages);
+    cout << "rows = " << rows << endl;
+    cout << "cols = " << cols << endl;
+    cout << "numImages = " << numImages << endl;
+
+    // Iterative FFT requires input size to be a power of 2
+    int truncated_rows = log2(rows);
+    truncated_rows = pow(2, truncated_rows);
+    int truncated_cols = log2(cols);
+    truncated_cols = pow(2, truncated_cols);
+    cout << "resized row and column size: \t" << truncated_rows << ", " << truncated_cols << endl;
+
+    // File name preparation
+    filename = root_path + filename;
+
+    
+    ofstream fftFile(filename); 
+    if (!fftFile.is_open()){
+        cerr << "Failed to open file for writing!" << endl;
+    }
+    cout << "Writing results to: " << filename << endl;
+
+    // get data for each image
+    Complex **tmpImage = new Complex *[rows];
+
+    // FFT for each image
+    for (int imgIdx = 0; imgIdx < 10; imgIdx++) { // ***  change 10 to numImages
+    
+        tmpImage = ds.getImage(imgIdx); 
+        
+        // FFT with provided method (as a function pointer)
+        func(tmpImage, truncated_rows, truncated_cols);
+
+        // Write Our result to the output fft image 
+        // Row Major
+        for (int i = 0; i < truncated_rows; i++)
+            ds.setImage(imgIdx, tmpImage, true); // true: set image for ds.fft_data
+            
+        // store the result for current channel
+        if (toFile) {      
+            for (int i = 0; i < truncated_rows; ++i) {
+                for (int j = 0; j < truncated_cols; ++j) {
+                    fftFile << "Image " << imgIdx << ", FFT[" << i << ", " << j << "] = " << tmpImage[i][j] << endl;
+                }
+                fftFile << std::endl; // New line at the end of each row
+            }
+        }
+        for (int i = 0; i < rows; ++i) 
+            delete[] tmpImage[i];
+
+        delete[] tmpImage;
+    }
+    
+    fftFile.close();
+}
+
+
