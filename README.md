@@ -36,8 +36,8 @@ In the `./FFT/` folder use the bash command `make`
 ### 2D FFT
 - ~2D FFT~
 - ~FFTW_2D wrapper~
-- `eval_performance` for 2D methods
-- `eval_correctness` for 2D methods
-- Dataloader for 2D data (CIFAR10 grayscale)
+- ~`eval_performance` for 2D methods~
+- ~`eval_correctness` for 2D methods~
+- ~Dataloader for 2D data (CIFAR10 grayscale)~
 
 ### `OpenMP` v.s. `MPI` v.s. `CUDA`
