@@ -54,7 +54,7 @@ public:
     ~Dataset2D();
 
     // Accessor for the dimensions
-    void getDimensions(int& r, int& c) const;
+    void getDimensions(int& r, int& c, int& nImages) const;
 
     // Get an element from the dataset
     std::complex<double> getElement(unsigned int imgID, unsigned int i, unsigned int j, bool isFFT = false) const;

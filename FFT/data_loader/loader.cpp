@@ -172,6 +172,11 @@ void Dataset2D::setElement(complex<double> val, unsigned int imageIndex, unsigne
         images[imageIndex * rows * cols + row * cols + col] = val;
 }
 
+// Accessor for the dimensions
+void Dataset2D::getDimensions(int& r, int& c, int& nImages) const{
+    r = rows; c = cols; nImages = numImages;
+}
+
 // Get the 2d array for a specific image
 complex<double>** Dataset2D::getImage(unsigned int imageIndex, bool isFFT) const {
     if (imageIndex < 0 || imageIndex >= numImages)
