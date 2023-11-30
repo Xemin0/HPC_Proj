@@ -106,26 +106,34 @@ T* flatten_col_major(T** array2D, int rows, int cols)
 }
 
 template <typename T>
-T getEntry_row_major(T* arr, int rows, int cols,
+T getEntry_row_major(T* mat, int rows, int cols,
                      int rowIdx, int colIdx)
 {
     // Get entry of a matrix that's flatten in a row-major 1D array
     if (rowIdx < 0 || rowIdx >= rows || colIdx < 0 || colIdx >= cols)
         throw out_of_range("Index out of range!");
 
-    return arr[rowIdx * cols + colIdx];
+    return mat[rowIdx * cols + colIdx];
 }
 
 template <typename T>
-T getEntry_col_major(T* arr, int rows, int cols,
+T getEntry_col_major(T* mat, int rows, int cols,
                      int rowIdx, int colIdx)
 {
     // Get entry of a matrix that's flatten in a col-major 1D array
     if (rowIdx < 0 || rowIdx >= rows || colIdx < 0 || colIdx >= cols)
         throw out_of_range("Index out of range!");
 
-    return arr[rowIdx + rows * colIdx];
+    return mat[rowIdx + rows * colIdx];
 }
+
+
+// getRow()
+
+// getCol()
+
+
+//********************************//
 
 // Instantiate the template //
 // Complex

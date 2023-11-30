@@ -44,11 +44,11 @@ template <typename T>
 T* flatten_col_major(T** array2D, int rows, int cols);
 
 template <typename T>
-T getEntry_row_major(T* arr, int rows, int cols,
+T getEntry_row_major(T* mat, int rows, int cols,
                      int rowIdx, int colIdx);
 
 template <typename T>
-T getEntry_col_major(T* arr, int rows, int cols,
+T getEntry_col_major(T* mat, int rows, int cols,
                      int rowIdx, int colIdx);
 
 
