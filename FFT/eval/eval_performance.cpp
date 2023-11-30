@@ -94,7 +94,7 @@ unsigned long eval_FFT1d_4Data(Dataset1D& ds, FuncPtr func,
     if (!timeFile.is_open()){
         cerr << "Failed to open file for writing!" << endl;
     }
-    cout << "Writing average time to: " << time_filename << endl;
+    cout << "Writing average time of 1D FFT to: " << time_filename << endl;
 
 	unsigned long avg_t = 0;
 
@@ -111,7 +111,7 @@ unsigned long eval_FFT1d_4Data(Dataset1D& ds, FuncPtr func,
 
 	// write to the file if specified
 	if (toFile)      
-		timeFile << "Average time of " << testruns << " runs: " << avg_t << " us" << endl;
+		timeFile << "Average time of 1D FFT over the whole 1D-Dataset of " << testruns << " runs: " << avg_t << " us" << endl;
 
     timeFile.close();
 	return avg_t;
@@ -125,37 +125,43 @@ unsigned long time_FFT2d_4Data(Dataset2D& ds, FuncPtr2 func)
     /*  
      * Time a single run of provided 2D FFT method over the whole dataset
      */
-    int rows, cols, depth;   
-    ds.getDimensions(rows, cols, depth);
+    int rows, cols, nImgs;   
+    ds.getDimensions(rows, cols, nImgs);
     //cout << "rows = " << rows << endl;
     //cout << "cols = " << cols << endl;
-    //cout << "depth = " << depth << endl;
+    //cout << "nImgs = " << nImgs << endl;
 
     // Iterative FFT requires input size to be a power of 2
     int truncated_cols = log2(cols);
     truncated_cols = static_cast<int>(pow(2, truncated_cols));
     //cout << "resized column size: \t" << truncated_cols << endl;
 
+    int truncated_rows = log2(rows);
+    truncated_rows = static_cast<int>(pow(2, truncated_rows));
+    //cout << "resized row size: \t" << truncated_rows << endl;
+
 
     unsigned long tot_time = 0, start, end;
 
-    Complex tmp[truncated_cols];
-    // FFT for each channel/column
-    for (int i = 0; i < rows; i++) 
-        for (int k = 0; k < depth; k++){ 
-            // load channel/row data to tmp
-            for (int j = 0; j < truncated_cols; j++){
-                tmp[j] = ds.getElement(i+1, j+1, k+1); // Copy by value ?? not by reference??
-            }   
+    // 2D FFT for each image
+    for (int i = 0; i < 20; i++)  // **** Change current value back to nImgs
+    {
+        // Get image from the dataset by index
+        Complex** curr_img = ds.getImage(i, false);
 
-            // FFT with provided method (as a function pointer)
-            start = get_time();
-            func(tmp, truncated_cols);
-            end = get_time();
+        // 2D FFT with provided method (as a function pointer)
+        start = get_time();
+        func(curr_img, truncated_rows, truncated_cols);
+        end = get_time();
 
-            // Aggregate the timed result
-            tot_time += end - start;
-        }   
+        // clean up
+        for (int j = 0; j < rows; j++)
+            delete[] curr_img[j];
+        delete[] curr_img;
+
+        // Aggregate the timed result
+        tot_time += end - start;
+    }   
     return tot_time; 
 }
 
@@ -184,24 +190,24 @@ unsigned long eval_FFT2d_4Data(Dataset2D& ds, FuncPtr2 func,
     if (!timeFile.is_open()){
         cerr << "Failed to open file for writing!" << endl;
     }
-    cout << "Writing average time to: " << time_filename << endl;
+    cout << "Writing average time of 2D FFT to: " << time_filename << endl;
 
     unsigned long avg_t = 0;
 
     // Warm up runs
     for (int i = 0; i < warmup; i++)
-        time_FFT1d_4Data(ds, func);
+        time_FFT2d_4Data(ds, func);
 
 
     // Recording times and take the average
     for (int i = 0; i < testruns; i++)
-        avg_t += time_FFT1d_4Data(ds, func);
+        avg_t += time_FFT2d_4Data(ds, func);
 
     avg_t /= testruns;
 
     // write to the file if specified
     if (toFile)      
-        timeFile << "Average time of " << testruns << " runs: " << avg_t << " us" << endl;
+        timeFile << "Average time of 1D FFT over the whole 1D-Dataset of " << testruns << " runs: " << avg_t << " us" << endl;
 
     timeFile.close();
     return avg_t;

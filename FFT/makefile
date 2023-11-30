@@ -4,8 +4,13 @@
 
 # Compiler and flags ### g++ or g++-13
 CXX = g++
-CXXFLAGS = -Wall -std=c++11 -I/opt/homebrew/Cellar/fftw/3.3.10_1/include
-LDFLAGS = -L/opt/homebrew/Cellar/fftw/3.3.10_1/lib -lfftw3
+#CXXFLAGS = -Wall -std=c++11 -I/opt/homebrew/Cellar/fftw/3.3.10_1/include
+#LDFLAGS = -L/opt/homebrew/Cellar/fftw/3.3.10_1/lib -lfftw3
+
+CXXFLAGS = -Wall -std=c++11 -I/usr/local/Cellar/fftw/3.3.10_1/include
+LDFLAGS = -L/usr/local/Cellar/fftw/3.3.10_1/lib -lfftw3
+
+
 
 
 # Directories ## Add more dir for modules

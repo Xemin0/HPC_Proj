@@ -12,11 +12,12 @@
 #include "./lib/fftw_wrapper.h" // FFTW method wrapper
 #include "./lib/iterative_CT.h" // iterative FFT
 #include "./lib/recursive_CT.h" // recursive FFt
-#include "./lib/loader.h" // DataLoader
-#include "./lib/vec_utils.h" // vector manipulations
+#include "./lib/fft2d.h"        // 2D FFT
+#include "./lib/loader.h"       // DataLoader
+#include "./lib/vec_utils.h"    // vector manipulations
 #include "./lib/eval_correctness.h" // subroutines to verify correctness
 #include "./lib/eval_performance.h" // subroutines to measure performance
-#include "./lib/timer.h"	// timer
+#include "./lib/timer.h"	    // timer
 using namespace std;
 
 typedef std::complex<double> Complex;
@@ -87,7 +88,7 @@ int main()
 
     // Load Data
     Dataset1D finger1;
-    //Dataset2D cifar10;
+    Dataset2D cifar10;
 
 	//******** Validating the Correctness of 1D ********//
 
@@ -134,6 +135,13 @@ int main()
 
     // ************* 2D FFT *************** //
 
+	// Eval the Average Time Performing Iterative 1D FFT and output to a file
+	eval_FFT2d_4Data(cifar10,	// Dataset
+					 fft_2d,     // FFT method to test
+					 2,			// warm up runs (excluded in eval)
+					 5,			// testruns to take the average of
+					 true,		// if write to file
+					 "our2d");  // base filename
 
 
 
