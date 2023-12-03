@@ -41,3 +41,4 @@ In the `./FFT/` folder use the bash command `make`
 - ~Dataloader for 2D data (CIFAR10 grayscale)~
 
 ### `OpenMP` v.s. `MPI` v.s. `CUDA`
+- Keep Codes in Separate Branches
