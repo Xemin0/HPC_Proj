@@ -19,6 +19,7 @@
 //#include "../lib/fftw_wrapper.h"
 
 #include "../lib/timer.h" // get_time() return time in microsecond (us)
+                          // HighPrecisionTimer that measure both CPU and GPU time
 #include "../lib/loader.h"
 using namespace std;
 
@@ -31,7 +32,7 @@ typedef void (*FuncPtr2)(Complex**, int, int);   // for 2D FFT methods
 
 // ********** 1D FFT Performance Evaluation *********** //
 
-unsigned long time_FFT1d_4Data(Dataset1D& ds, FuncPtr func)
+float time_FFT1d_4Data(Dataset1D& ds, FuncPtr func)
 {
 	/*
 	 * Time a single run of provided 1D FFT method over the whole dataset
@@ -48,7 +49,11 @@ unsigned long time_FFT1d_4Data(Dataset1D& ds, FuncPtr func)
     //cout << "resized column size: \t" << truncated_cols << endl;
 
 
-	unsigned long tot_time = 0, start, end;
+    float tot_time = 0.0;
+    //unsigned long start, end;
+
+    // high precision timer 
+    HighPrecisionTimer timer;
 
 	Complex tmp[truncated_cols];
     // 1D FFT for each channel/column
@@ -60,17 +65,20 @@ unsigned long time_FFT1d_4Data(Dataset1D& ds, FuncPtr func)
             }   
 
             // 1D FFT with provided method (as a function pointer)
-			start = get_time();
+			//start = get_time();
+            timer.Start();
             func(tmp, truncated_cols);
-			end = get_time();
+			//end = get_time();
+            timer.Stop();
 
 			// Aggregate the timed result
-			tot_time += end - start;
+			//tot_time += end - start;
+            tot_time += timer.Elapsed();
         }  
 	return tot_time; 
 }
 
-unsigned long eval_FFT1d_4Data(Dataset1D& ds, FuncPtr func, 
+float eval_FFT1d_4Data(Dataset1D& ds, FuncPtr func, 
 					  int warmup, int testruns,
 					  bool toFile, std::string filename)
 {
@@ -96,7 +104,7 @@ unsigned long eval_FFT1d_4Data(Dataset1D& ds, FuncPtr func,
     }
     cout << "Writing average time of 1D FFT to: " << time_filename << endl;
 
-	unsigned long avg_t = 0;
+	float avg_t = 0;
 
 	// Warm up runs
 	for (int i = 0; i < warmup; i++)
@@ -120,7 +128,7 @@ unsigned long eval_FFT1d_4Data(Dataset1D& ds, FuncPtr func,
 
 // ********** 2D FFT Performance Evaluation *********** //
 
-unsigned long time_FFT2d_4Data(Dataset2D& ds, FuncPtr2 func)
+float time_FFT2d_4Data(Dataset2D& ds, FuncPtr2 func)
 {
     /*  
      * Time a single run of provided 2D FFT method over the whole dataset
@@ -141,7 +149,11 @@ unsigned long time_FFT2d_4Data(Dataset2D& ds, FuncPtr2 func)
     //cout << "resized row size: \t" << truncated_rows << endl;
 
 
-    unsigned long tot_time = 0, start, end;
+    float tot_time = 0;
+    //unsigned long start, end;
+
+    // high precision timer
+    HighPrecisionTimer timer;
 
     // 2D FFT for each image
     for (int i = 0; i < 20; i++)  // **** Change current value back to nImgs
@@ -150,9 +162,11 @@ unsigned long time_FFT2d_4Data(Dataset2D& ds, FuncPtr2 func)
         Complex** curr_img = ds.getImage(i, false);
 
         // 2D FFT with provided method (as a function pointer)
-        start = get_time();
+        //start = get_time();
+        timer.Start();
         func(curr_img, truncated_rows, truncated_cols);
-        end = get_time();
+        //end = get_time();
+        timer.Stop();
 
         // clean up
         for (int j = 0; j < rows; j++)
@@ -160,13 +174,14 @@ unsigned long time_FFT2d_4Data(Dataset2D& ds, FuncPtr2 func)
         delete[] curr_img;
 
         // Aggregate the timed result
-        tot_time += end - start;
+        //tot_time += end - start;
+        tot_time += timer.Elapsed();
     }   
     return tot_time; 
 }
 
 
-unsigned long eval_FFT2d_4Data(Dataset2D& ds, FuncPtr2 func, 
+float eval_FFT2d_4Data(Dataset2D& ds, FuncPtr2 func, 
                       int warmup, int testruns,
                       bool toFile, std::string filename)
 {
@@ -192,7 +207,7 @@ unsigned long eval_FFT2d_4Data(Dataset2D& ds, FuncPtr2 func,
     }
     cout << "Writing average time of 2D FFT to: " << time_filename << endl;
 
-    unsigned long avg_t = 0;
+    float avg_t = 0;
 
     // Warm up runs
     for (int i = 0; i < warmup; i++)
