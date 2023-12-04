@@ -40,12 +40,10 @@ public:
 
 class Dataset2D {
 private:
-    //double* data; // Column major storage for 2D data
     int rows, cols, channels, numImages, imageSize; // Dimensions of the 2D dataset (the number of rows, cols, and channels for each image and the num of images)
 
-    std::complex<double>* images;
-    //std::complex<double>* cdata; // Column major storage for complex data
-    std::complex<double>* fft_data; // Column major storage for FFT-transformed data
+    std::complex<double>* images; // Row major storage for input image data
+    std::complex<double>* fft_data; // Row major storage for FFT-transformed data
 
 public:
     // Constructor
