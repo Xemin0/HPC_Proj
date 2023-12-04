@@ -12,15 +12,14 @@
 #include "./lib/fftw_wrapper.h" // FFTW method wrapper
 #include "./lib/iterative_CT.h" // iterative FFT
 #include "./lib/recursive_CT.h" // recursive FFt
-<<<<<<< HEAD
+
+#include "./lib/fft1d_openMP.h" // fft1d optimize using openMP --> added by Yuhong
+
+
 #include "./lib/fft2d.h"        // 2D FFT
 #include "./lib/loader.h"       // DataLoader
 #include "./lib/vec_utils.h"    // vector manipulations
-=======
-#include "./lib/fft2d.h" // FFTW method wrapper
-#include "./lib/loader.h" // DataLoader
-#include "./lib/vec_utils.h" // vector manipulations
->>>>>>> merielyn
+
 #include "./lib/eval_correctness.h" // subroutines to verify correctness
 #include "./lib/eval_performance.h" // subroutines to measure performance
 #include "./lib/timer.h"	    // timer
@@ -101,16 +100,23 @@ int main()
     // ************* 1D FFT *************** //
 
     // Eval the Correctness of Iterative 1D FFT and output to a file
-    // FFT1d_4Data(finger1, // Dataset
-	// 			fft_it_1d, // FFT method to test
-    //             true, // if write toFile
-    //             "our1d_it.txt");// filename
-    /*
-    // Eval the Correctness of FFTW's 1D FFT and output to a file
     FFT1d_4Data(finger1, // Dataset
-                fftw_1d_wrapper, // FFT method to test
+				fft_it_1d, // FFT method to test
                 true, // if write toFile
-                "our1d_fftw.txt");// filename
+                "our1d_it.txt");// filename
+
+    FFT1d_4Data(finger1, // Dataset
+				fft_it_1d_openMP, // FFT method to test
+                true, // if write toFile
+                "our1d_it_openMP.txt");// filename
+
+    
+    // Eval the Correctness of FFTW's 1D FFT and output to a file
+
+    // FFT1d_4Data(finger1, // Dataset
+    //             fftw_1d_wrapper, // FFT method to test
+    //             true, // if write toFile
+    //             "our1d_fftw.txt");// filename
 
     // Eval the Correctness of Recursive 1D FFT and output to a file
     FFT1d_4Data(finger1, // Dataset
@@ -118,7 +124,7 @@ int main()
                 true, // if write toFile
                 "our1d_re.txt");// filename
 
-	*/
+	
 
     // ************* 2D FFT *************** //
     FFT2d_4Data(cifar10,
@@ -150,12 +156,12 @@ int main()
     // ************* 2D FFT *************** //
 
 	// Eval the Average Time Performing Iterative 1D FFT and output to a file
-	eval_FFT2d_4Data(cifar10,	// Dataset
-					 fft_2d,     // FFT method to test
-					 2,			// warm up runs (excluded in eval)
-					 5,			// testruns to take the average of
-					 true,		// if write to file
-					 "our2d");  // base filename
+	// eval_FFT2d_4Data(cifar10,	// Dataset
+	// 				 fft_2d,     // FFT method to test
+	// 				 2,			// warm up runs (excluded in eval)
+	// 				 5,			// testruns to take the average of
+	// 				 true,		// if write to file
+	// 				 "our2d");  // base filename
 
 
 
