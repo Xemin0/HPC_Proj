@@ -12,15 +12,10 @@
 #include "./lib/fftw_wrapper.h" // FFTW method wrapper
 #include "./lib/iterative_CT.h" // iterative FFT
 #include "./lib/recursive_CT.h" // recursive FFt
-<<<<<<< HEAD
 #include "./lib/fft2d.h"        // 2D FFT
+
 #include "./lib/loader.h"       // DataLoader
 #include "./lib/vec_utils.h"    // vector manipulations
-=======
-#include "./lib/fft2d.h" // FFTW method wrapper
-#include "./lib/loader.h" // DataLoader
-#include "./lib/vec_utils.h" // vector manipulations
->>>>>>> merielyn
 #include "./lib/eval_correctness.h" // subroutines to verify correctness
 #include "./lib/eval_performance.h" // subroutines to measure performance
 #include "./lib/timer.h"	    // timer
