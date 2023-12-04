@@ -1,6 +1,6 @@
 ## Make File to Compile the projet
 
-#### !!Replace the main driver and the `FFTW` library path as needed!! ####
+# Replace the main driver and the `FFTW` library path as needed
 
 # Compiler and flags ### g++ or g++-13
 CXX = g++
@@ -23,62 +23,57 @@ EVAL_DIR = eval
 
 # Source files ## Add more modules
 SOURCES = $(SRC_DIR)/main.cpp \
+          $(CT_DIR)/iterative_CT.cpp \
+          $(CT_DIR)/recursive_CT.cpp \
+          $(CT_DIR)/fftw_wrapper.cpp \
+		  $(CT_DIR)/fft2d.cpp \
+		  $(CT_DIR)/<******.cpp> \ #### Your Filename that uses OpenMP
           $(DL_DIR)/loader.cpp \
           $(UTILS_DIR)/timer.cpp \
 		  $(UTILS_DIR)/vec_utils.cpp \
 		  $(EVAL_DIR)/eval_correctness.cpp \
-		  $(EVAL_DIR)/eval_performance.cpp \
-          $(CT_DIR)/iterative_CT.cpp \
-          $(CT_DIR)/recursive_CT.cpp \
-          $(CT_DIR)/fftw_wrapper.cpp \
-		  $(CT_DIR)/fft2d.cpp  #### Add NewFiles Below this line: Presumably under $(CT_DIR)
+		  $(EVAL_DIR)/eval_performance.cpp
 
-# Object files ## No Need to Change
+# Object files
 OBJECTS = $(SOURCES:.cpp=.o)
 
-# Executable name ## No Need to Change unless renaming is necessary
+# Executable name
 EXEC = It_CT.out
 
-# Default target ## No Need to Change
+# Default target
 all: $(EXEC)
 	@echo "Build Successful!"
 	rm -f $(OBJECTS) 		# Remove intermediate .o files
 
-# // Linking 
-#### Append Compiling Flags as Needed, e.g. OpenMP, MPI, CUDA
-#### Change the Compiler as Needed, e.g. MPI, CUDA
+# // Linking #### With OpenMP
 $(EXEC): $(OBJECTS)
-	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS) -fopenmp
 
-# Generic rule for building object files  #### No Need to Change
-# // Compiling For intemerdiate binary files with `-c`
+# Generic rule for building object files // Compilation
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@ 
 
-# Clean up #### No Need to Change
+#### Special Rule for the File with OpenMP
+$(CT_DIR)/<*****.o>: $(CT_DIR)/<*****.cpp>
+	$(CXX) -fopenmp -c $< -o $@
+
+# Clean up
 clean:
 	rm -f $(OBJECTS) $(EXEC)
 
-
-# Dependencies 
-# Miscellaneous Section #### No Need to Change
+# Dependencies
+$(CT_DIR)/iterative_CT.o: $(LIB_DIR)/iterative_CT.h # Iterative method
+$(CT_DIR)/recursive_CT.o: $(LIB_DIR)/recursive_CT.h # Recursive method
+$(CT_DIR)/fftw_wrapper.o: $(LIB_DIR)/fftw_wrapper.h # FFTW wrapper
+$(CT_DIR)/fft2d.o: $(LIB_DIR)/fft2d.h				# 2D FFT
+$(CT_DIR)/<****.o>: $(LIB_DIR)/<*****.h>			#### Header and itermediate .o file that uses OpenMP
 $(DL_DIR)/loader.o: $(LIB_DIR)/loader.h 			# Data loader
 $(UTILS_DIR)/timer.o: $(LIB_DIR)/timer.h 			# CPU/GPU timer
 $(UTILS_DIR)/vec_utils.o: $(LIB_DIR)/vec_utils.h	# Vector manipulations
 $(EVAL_DIR)/eval_correctness.o: $(LIB_DIR)/eval_correctness.h	# Validation of Correctness
 $(EVAL_DIR)/eval_performance.o: $(LIB_DIR)/eval_performance.h	# Validation of Performance
-
-# FFT Method Section
-#### Relate the Intermediate Binary Files with its Direct Declartion (Header)
-$(CT_DIR)/iterative_CT.o: $(LIB_DIR)/iterative_CT.h # Iterative method
-$(CT_DIR)/recursive_CT.o: $(LIB_DIR)/recursive_CT.h # Recursive method
-$(CT_DIR)/fftw_wrapper.o: $(LIB_DIR)/fftw_wrapper.h # FFTW wrapper
-$(CT_DIR)/fft2d.o: $(LIB_DIR)/fft2d.h 				# 2D FFT
-
-# Main Driver #### No Need to Change
-#				   $(LIB_DIR)/timer.h $(LIB_DIR)/vec_utils.h \
-$(SRC_DIR)/main.o: $(LIB_DIR)/loader.h \
+$(SRC_DIR)/main.o: $(LIB_DIR)/loader.h $(LIB_DIR)/timer.h $(LIB_DIR)/vec_utils.h \
 				   $(LIB_DIR)/eval_correctness.h $(LIB_DIR)/eval_performance.h \
 				   $(LIB_DIR)/iterative_CT.h $(LIB_DIR)/recursive_CT.h \
-				   $(LIB_DIR)/fftw_wrapper.h $(LIB_DIR)/fft2d.h  #### Add New Lines of dependencies needed in main.cpp
-
+				   $(LIB_DIR)/fftw_wrapper.h $(LIB_DIR)/fft2d.h \
+				   $(LIB)/<*****.h> \ #### Additional Files that uses OpenMP
