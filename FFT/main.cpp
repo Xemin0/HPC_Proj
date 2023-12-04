@@ -15,10 +15,10 @@
 #include "./lib/fft2d.h"        // 2D FFT
 
 #include "./lib/loader.h"       // DataLoader
-#include "./lib/vec_utils.h"    // vector manipulations
+//#include "./lib/vec_utils.h"    // vector manipulations
 #include "./lib/eval_correctness.h" // subroutines to verify correctness
 #include "./lib/eval_performance.h" // subroutines to measure performance
-#include "./lib/timer.h"	    // timer
+//#include "./lib/timer.h"	    // timer
 using namespace std;
 
 typedef std::complex<double> Complex;

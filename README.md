@@ -42,3 +42,5 @@ In the `./FFT/` folder use the bash command `make`
 
 ### `OpenMP` v.s. `MPI` v.s. `CUDA`
 - Keep Codes in Separate Branches
+- `makefile` for each
+- `SLURM` script for each
