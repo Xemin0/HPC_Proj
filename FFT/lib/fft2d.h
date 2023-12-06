@@ -13,5 +13,7 @@ typedef std::complex<double> Complex;
 
 void fft_2d(Complex **img, int rows, int cols);
 
+void fft_2d_openMP(Complex **img, int rows, int cols);
+
 // !!!! MAY NEED AN OVERLOAD FOR FLATTENED 1D INPUT !!!! // 
 //void fft_2d(Complex *img, int rows, int cols);

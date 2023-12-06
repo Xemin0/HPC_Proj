@@ -8,6 +8,9 @@
 #include <stdlib.h>
 #include <cmath>
 #include <fstream>
+#include <omp.h> // For openMP --> added by Yuhong
+#include <chrono> // For high-resolution timer --> added by Yuhong
+
 
 #include "./lib/fftw_wrapper.h" // FFTW method wrapper
 #include "./lib/iterative_CT.h" // iterative FFT
@@ -100,15 +103,23 @@ int main()
     // ************* 1D FFT *************** //
 
     // Eval the Correctness of Iterative 1D FFT and output to a file
+
+    double start_time1 = omp_get_wtime(); // Start the timer
     FFT1d_4Data(finger1, // Dataset
 				fft_it_1d, // FFT method to test
                 true, // if write toFile
                 "our1d_it.txt");// filename
+    double end_time1 = omp_get_wtime(); // end the timer
+    std::cout << "Time for the FFT1D with iterative methods: " << (end_time1 - start_time1) << " seconds." << std::endl;
 
+
+    double start_time2 = omp_get_wtime(); // Start the timer
     FFT1d_4Data(finger1, // Dataset
 				fft_it_1d_openMP, // FFT method to test
                 true, // if write toFile
                 "our1d_it_openMP.txt");// filename
+    double end_time2 = omp_get_wtime(); // end the timer
+    std::cout << "Time for the FFT1D with openMP: " << (end_time2 - start_time2) << " seconds." << std::endl;
 
     
     // Eval the Correctness of FFTW's 1D FFT and output to a file
@@ -119,23 +130,39 @@ int main()
     //             "our1d_fftw.txt");// filename
 
     // Eval the Correctness of Recursive 1D FFT and output to a file
+    double start_time3 = omp_get_wtime(); // Start the timer
     FFT1d_4Data(finger1, // Dataset
 				fft_re_1d, // FFT method to test
                 true, // if write toFile
                 "our1d_re.txt");// filename
-
+    double end_time3 = omp_get_wtime(); // end the timer
+    std::cout << "Time for the FFT1D with recursive method: " << (end_time3 - start_time3) << " seconds." << std::endl;
 	
 
     // ************* 2D FFT *************** //
+    double start_time4 = omp_get_wtime(); // Start the timer
     FFT2d_4Data(cifar10,
                 fftw_2d_wrapper,
                 true,
                 "out2d_fftw.txt");
+    double end_time4 = omp_get_wtime(); // end the timer
+    std::cout << "Time for the FFT2D: " << (end_time4 - start_time4) << " seconds." << std::endl;
 
+    double start_time5 = omp_get_wtime(); // Start the timer
     FFT2d_4Data(cifar10,
                 fft_2d,
                 true,
                 "out2d_custom.txt");
+    double end_time5 = omp_get_wtime(); // end the timer
+    std::cout << "Time for the FFT2D with iterative method: " << (end_time5 - start_time5) << " seconds." << std::endl;
+
+    double start_time6 = omp_get_wtime(); // Start the timer
+    FFT2d_4Data(cifar10,
+                fft_2d_openMP,
+                true,
+                "out2d_openMP.txt");
+    double end_time6 = omp_get_wtime(); // end the timer
+    std::cout << "Time for the FFT2D with openMP: " << (end_time6 - start_time6) << " seconds." << std::endl;
 
 	//*********************************************************//
 
