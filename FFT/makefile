@@ -14,7 +14,7 @@ CXX = g++
 CXXFLAGS = -Wall -std=c++11
 LDFLAGS = -lfftw3
 
-NVCCFLAGS = --arch sm_75
+NVCCFLAGS = -arch sm_75
 
 
 
