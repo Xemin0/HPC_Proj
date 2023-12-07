@@ -7,7 +7,6 @@
  */
 
 #include <cuda.h>
-#include <cmath>
 
 #include "../lib/iterative_CT.h"
 
@@ -40,7 +39,7 @@ __global__ void bitReverse_kernel(Complex *d_x, int N){
     // Less likely, but just in case the total number of threads = stride < N
     for (int i = startIdx; i < N - 1; i += stride){
         int j = 0;
-        for (int k = 0; k < log2(N); ++k) // for each bit
+        for (int k = 0; k < __log2f(N); ++k) // for each bit
             if (i & (1 << k))
                 j |= (N >> (k+1));
 
@@ -74,9 +73,9 @@ __global__ void fft1d_kernel(Complex *d_x, int N){
 
     // Tiling
     // less likely, but just in case the total number of threads = stride < N
-    for (int i = stratIdx; i < N - 1; i += stride){
+    for (int i = startIdx; i < N - 1; i += stride){
         int j = 0;
-        for (int k = 0; k < log2(N); ++k) // for each bit
+        for (int k = 0; k < __log2f(N); ++k) // for each bit
             if (i & (1 << k))
                 j |= (N >> (k+1));
 
@@ -99,8 +98,9 @@ __global__ void fft1d_kernel(Complex *d_x, int N){
      */
     int idx = blockIdx.x * blockDim.x + threadIdx.x; // ### blockDim.x = N/2 with one Block
 
-    __shared__ Complex x_shared0[N/2]; // shared memory for d_x First Half
-    __shared__ Complex x_shared1[N/2]; // shared memory for d_x Second Half
+    extern __shared__ Complex sharedMem[];
+    Complex *x_shared0 = sharedMem;             // shared memory for d_x First Half
+    Complex *x_shared1 = sharedMem + blockDim.x;// shared memory for d_x Second Half
 
     // Load d_x to be reused for each stage
     if (idx < N / 2){
@@ -147,7 +147,7 @@ __global__ void fft1d_kernel(Complex *d_x, int N){
         d_x[idx] = x_shared0[idx];
         d_x[idx + N/2] = x_shared1[idx];
     }
-
+}
 
 void fft1d_device(Complex *d_x, int N)
 {
@@ -161,7 +161,9 @@ void fft1d_device(Complex *d_x, int N)
     dim3 nthreads(N/2, 1, 1);   // BlockDim
     dim3 nblocks(1, 1, 1);      // GridDim
 
-    fft1d_kernel <<< nblocks, nthreads, 0, 0 >>> (d_x, N);
+    int sharedMemSize = sizeof(Complex) * N; // Total shared memory size
+
+    fft1d_kernel <<< nblocks, nthreads, sharedMemSize, 0 >>> (d_x, N);
 }
 
 
