@@ -12,6 +12,7 @@
 
 typedef std::complex<double> Complex;
 
+__device__ cuDoubleComplex pow_cuDoubleComplex(cuDoubleComplex z, int n);
 
 __global__ void bitReverse_kernel(cuDoubleComplex *d_x, int N);
 

@@ -18,6 +18,19 @@
 typedef std::complex<double> Complex;
 const double PI = 3.14159265358973238460;
 
+// ### Utilities ### //
+__device__ cuDoubleComplex pow_cuDoubleComplex(cuDoubleComplex z, int n){
+    double r = cuCabs(z); // Magnitude
+    double theta = atan2(cuCimg(z), cuCreal(z)); // Argument
+
+    double rn = pow(r, n);
+    double nTheta = n * theta;
+
+    return make_cuDoubleComplex(rn * cos(nTheta), rn * sin(nTheta));
+}
+
+// ###########################################
+
 // Kernel for BitReverse
 // *** If it's worth to define bitReverse as a kernel ?? *** //
 // *** parallelization may not be worthy for small data size *** //
@@ -121,7 +134,7 @@ __global__ void fft1d_kernel(cuDoubleComplex *d_x, int N){
             int local_tid = idx % (len/2);
             int segment_start = segment_idx * len;
 
-            cuDoubleComplex w = powf(wlen, local_tid);
+            cuDoubleComplex w = pow_cuDoubleComplex(wlen, local_tid);
 
             int u_idx = segment_start + local_tid;
             int v_idx = u_idx + len/2;
