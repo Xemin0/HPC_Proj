@@ -12,10 +12,6 @@
 #include <cuda.h> // GPU High Precision Timer
 
 
-// ### CPU Timer ####
-unsigned long get_time(); // microsecond (us)
-
-
 // ### GPU Timer ####
 //struct gpuTime;
 

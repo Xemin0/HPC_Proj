@@ -30,7 +30,7 @@ SOURCES = $(SRC_DIR)/main.cu \
 		  $(UTILS_DIR)/timer.cpp \
 		  $(UTILS_DIR)/vec_utils.cpp \
 		  $(EVAL_DIR)/eval_correctness.cpp \
-		  $(EVAL_DIR)/eval_performance.cpp \
+		  $(EVAL_DIR)/eval_performance.cu \
 		  $(CT_DIR)/iterative_CT.cpp \
 		  $(CT_DIR)/recursive_CT.cpp \
 		  $(CT_DIR)/fftw_wrapper.cpp \
@@ -71,7 +71,7 @@ clean:
 # Dependencies 
 # Miscellaneous Section #### No Need to Change
 $(DL_DIR)/loader.o: $(LIB_DIR)/loader.h 			# Data loader
-$(UTILS_DIR)/timer.o: $(LIB_DIR)/timer.h 			# CPU/GPU timer
+#$(UTILS_DIR)/timer.o: $(LIB_DIR)/timer.h 			# CPU/GPU timer
 $(UTILS_DIR)/vec_utils.o: $(LIB_DIR)/vec_utils.h	# Vector manipulations
 $(EVAL_DIR)/eval_correctness.o: $(LIB_DIR)/eval_correctness.h	# Validation of Correctness
 $(EVAL_DIR)/eval_performance.o: $(LIB_DIR)/eval_performance.h	# Validation of Performance
