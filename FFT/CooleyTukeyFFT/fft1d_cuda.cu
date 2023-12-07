@@ -16,7 +16,7 @@
 #define FULL_MASK 0xffffffff
 
 typedef std::complex<double> Complex;
-const double PI = 3.14159265358973238460
+const double PI = 3.14159265358973238460;
 
 // Kernel for BitReverse
 // *** If it's worth to define bitReverse as a kernel ?? *** //
