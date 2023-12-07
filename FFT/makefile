@@ -26,14 +26,14 @@ EVAL_DIR = eval
 
 # Source files ## Add more modules
 SOURCES = $(SRC_DIR)/main.cu \
-          $(DL_DIR)/loader.cpp \
-          $(UTILS_DIR)/timer.cpp \
+		  $(DL_DIR)/loader.cpp \
+		  $(UTILS_DIR)/timer.cpp \
 		  $(UTILS_DIR)/vec_utils.cpp \
 		  $(EVAL_DIR)/eval_correctness.cpp \
 		  $(EVAL_DIR)/eval_performance.cpp \
-          $(CT_DIR)/iterative_CT.cpp \
-          $(CT_DIR)/recursive_CT.cpp \
-          $(CT_DIR)/fftw_wrapper.cpp \
+		  $(CT_DIR)/iterative_CT.cpp \
+		  $(CT_DIR)/recursive_CT.cpp \
+		  $(CT_DIR)/fftw_wrapper.cpp \
 		  $(CT_DIR)/fft2d.cpp \ 
 		  $(CT_DIR)/fft1d_cuda.cu
 
