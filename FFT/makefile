@@ -11,7 +11,7 @@ CXX = g++
 #CXXFLAGS = -Wall -std=c++11 -I/usr/local/Cellar/fftw/3.3.10_1/include
 #LDFLAGS = -L/usr/local/Cellar/fftw/3.3.10_1/lib -lfftw3
 
-CXXFLAGS = -Wall -std=c++11
+CXXFLAGS = -std=c++11
 LDFLAGS = -lfftw3
 
 NVCCFLAGS = -arch sm_75
