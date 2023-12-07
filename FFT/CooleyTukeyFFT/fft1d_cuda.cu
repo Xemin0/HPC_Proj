@@ -114,7 +114,7 @@ __global__ void fft1d_kernel(cuDoubleComplex *d_x, int N){
     // Each Stage
     for (int len = 2; len <= N; len <<= 1){
         double angle = -2 * PI / len;
-        cuDoubleComplex wlen(cos(angle), sin(angle));
+        cuDoubleComplex wlen = make_cuDoubleComplex(cos(angle), sin(angle));
 
         if (idx < N/2){ // boundary check for each thread ** half of threads are idling
             int segment_idx = idx / (len/2); // len/2 threads for each segment
