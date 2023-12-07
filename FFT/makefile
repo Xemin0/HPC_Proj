@@ -92,6 +92,6 @@ $(CT_DIR)/fft1d_cuda.o: $(LIB_DIR)/fft1d_cuda.h		# 1D FFT w. CUDA
 $(SRC_DIR)/main.o: $(LIB_DIR)/loader.h \
 				   $(LIB_DIR)/eval_correctness.h $(LIB_DIR)/eval_performance.h \
 				   $(LIB_DIR)/iterative_CT.h $(LIB_DIR)/recursive_CT.h \
-				   $(LIB_DIR)/fftw_wrapper.h $(LIB_DIR)/fft2d.h \ #### Add New Lines of dependencies needed in main.cpp
+				   $(LIB_DIR)/fftw_wrapper.h $(LIB_DIR)/fft2d.h \
 				   $(LIB_DIR)/fft1d_cuda.h
 
