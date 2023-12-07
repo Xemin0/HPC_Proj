@@ -7,6 +7,7 @@
  */
 
 #include <cuda.h>
+#include <cuComplex.h>
 
 #include "../lib/iterative_CT.h"
 
@@ -22,7 +23,7 @@ const double PI = 3.14159265358973238460;
 // *** parallelization may not be worthy for small data size *** //
 // *** as the overhead of creating threads will outweigh the performance improvement *** //
 // *** and Coalesced Memory Accesses may not be guaranteed ** //
-__global__ void bitReverse_kernel(Complex *d_x, int N){
+__global__ void bitReverse_kernel(cuDoubleComplex *d_x, int N){
     /*
      * (Effectively?) Reverse the Bits of a Vector
      *
@@ -44,7 +45,7 @@ __global__ void bitReverse_kernel(Complex *d_x, int N){
                 j |= (N >> (k+1));
 
         if (i < j){ // Swap elements at i and j
-            Complex tmp = d_x[i];
+            cuDoubleComplex tmp = d_x[i];
             d_x[i] = d_x[j];
             d_x[j] = tmp;
         }
@@ -56,7 +57,7 @@ __global__ void bitReverse_kernel(Complex *d_x, int N){
 
 // ###########################################
 
-__global__ void fft1d_kernel(Complex *d_x, int N){
+__global__ void fft1d_kernel(cuDoubleComplex *d_x, int N){
     /*
      * 1 D FFT Kernel (** Currently Require blockDim.x = N/2 **)
      * 
@@ -80,7 +81,7 @@ __global__ void fft1d_kernel(Complex *d_x, int N){
                 j |= (N >> (k+1));
 
         if (i < j){ // Swap element at i and j
-            Complex tmp = d_x[i];
+            cuDoubleComplex tmp = d_x[i];
             d_x[i] = d_x[j];
             d_x[j] = tmp;
         }
@@ -98,9 +99,9 @@ __global__ void fft1d_kernel(Complex *d_x, int N){
      */
     int idx = blockIdx.x * blockDim.x + threadIdx.x; // ### blockDim.x = N/2 with one Block
 
-    extern __shared__ Complex sharedMem[];
-    Complex *x_shared0 = sharedMem;             // shared memory for d_x First Half
-    Complex *x_shared1 = sharedMem + blockDim.x;// shared memory for d_x Second Half
+    extern __shared__ cuDoubleComplex sharedMem[];
+    cuDoubleComplex *x_shared0 = sharedMem;             // shared memory for d_x First Half
+    cuDoubleComplex *x_shared1 = sharedMem + blockDim.x;// shared memory for d_x Second Half
 
     // Load d_x to be reused for each stage
     if (idx < N / 2){
@@ -113,30 +114,30 @@ __global__ void fft1d_kernel(Complex *d_x, int N){
     // Each Stage
     for (int len = 2; len <= N; len <<= 1){
         double angle = -2 * PI / len;
-        Complex wlen(cos(angle), sin(angle));
+        cuDoubleComplex wlen(cos(angle), sin(angle));
 
         if (idx < N/2){ // boundary check for each thread ** half of threads are idling
             int segment_idx = idx / (len/2); // len/2 threads for each segment
             int local_tid = idx % (len/2);
             int segment_start = segment_idx * len;
 
-            Complex w = pow(wlen, local_tid);
+            cuDoubleComplex w = powf(wlen, local_tid);
 
             int u_idx = segment_start + local_tid;
             int v_idx = u_idx + len/2;
 
-            Complex u = (u_idx < N/2) ? x_shared0[u_idx] : x_shared1[u_idx - N/2];
-            Complex v = (v_idx < N/2) ? x_shared0[v_idx] : x_shared1[v_idx - N/2];
+            cuDoubleComplex u = (u_idx < N/2) ? x_shared0[u_idx] : x_shared1[u_idx - N/2];
+            cuDoubleComplex v = (v_idx < N/2) ? cuCmul(x_shared0[v_idx], w) : cuCmul(x_shared1[v_idx - N/2], w);
 
             if (u_idx < N/2)
-                x_shared0[u_idx] = u + v;
+                x_shared0[u_idx] = cuCadd(u, v);
             else
-                x_shared1[u_idx - N/2] = u + v;
+                x_shared1[u_idx - N/2] = cuCadd(u, v);
 
             if (v_idx < N/2)
-                x_shared0[v_idx] = u - v;
+                x_shared0[v_idx] = cuCsub(u, v);
             else
-                x_shared1[v_idx] = u - v;
+                x_shared1[v_idx] = cuCsub(u, v);
         }
     }
 
@@ -149,7 +150,7 @@ __global__ void fft1d_kernel(Complex *d_x, int N){
     }
 }
 
-void fft1d_device(Complex *d_x, int N)
+void fft1d_device(cuDoubleComplex *d_x, int N)
 {
     /*
      * Kernel Launching Method of fft_1d_kernel
@@ -161,7 +162,7 @@ void fft1d_device(Complex *d_x, int N)
     dim3 nthreads(N/2, 1, 1);   // BlockDim
     dim3 nblocks(1, 1, 1);      // GridDim
 
-    int sharedMemSize = sizeof(Complex) * N; // Total shared memory size
+    int sharedMemSize = sizeof(cuDoubleComplex) * N; // Total shared memory size
 
     fft1d_kernel <<< nblocks, nthreads, sharedMemSize, 0 >>> (d_x, N);
 }
@@ -178,17 +179,17 @@ void fft1d_cu(Complex *h_x, int N)
      * 3. Copy Back the Results
      */
     // Allocate memory on DEVICE
-    Complex *d_x;
-    cudaMalloc( (void**) &d_x, sizeof(Complex)*N );
+    cuDoubleComplex *d_x;
+    cudaMalloc( (void**) &d_x, sizeof(cuDoubleComplex)*N );
 
     // Copy the vector from HOST to DEVICE
-    cudaMemcpy(d_x, h_x, sizeof(Complex) * N, cudaMemcpyHostToDevice);
+    cudaMemcpy(d_x, h_x, sizeof(cuDoubleComplex) * N, cudaMemcpyHostToDevice);
 
     // Launch the Kernel
     fft1d_device(d_x, N);
 
     // Copy back the result from DEVICE to HOST
-    cudaMemcpy(h_x, d_x, sizeof(Complex) * N, cudaMemcpyDeviceToHost);
+    cudaMemcpy(h_x, d_x, sizeof(cuDoubleComplex) * N, cudaMemcpyDeviceToHost);
 
     // Clean up
     cudaFree(d_x);
