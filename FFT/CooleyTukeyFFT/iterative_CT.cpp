@@ -16,17 +16,17 @@ const double PI = 3.14159265358973238460;
 // ** Remember to create a copy of the input ** //
 
 // bit reverse
-void bitReverse(Complex *x, int N)
+void bitReverse(Complex *x, int N) // Effectively Reverse the Bits
 {
-    for (int i = 1, j = 0; i < N; i++)
+    for (int i = 1, j = 0; i < N; i++) // ## j is dependent on that from the previous loop step, so this is not parallelizable
     {
-        int bit = N >> 1;
-        for (; j&bit; bit >>= 1)
+        int bit = N >> 1;       // Right-Shifting or Divided by 2
+        for (; j&bit; bit >>= 1)// Loop Until j and bit don't have common bits 
         {
-            j ^= bit;
+            j ^= bit;           // Marking the locations of the bits that are different
         }
         j ^= bit;
-        if (i < j)
+        if (i < j) 
             std::swap(x[i], x[j]);
     }
 }
@@ -35,11 +35,11 @@ void bitReverse(Complex *x, int N)
 void fft_it_1d(Complex *x, int N)
 {
     bitReverse(x, N);
-    for (int len = 2; len <= N; len <<= 1)
+    for (int len = 2; len <= N; len <<= 1) // Butterfly Step (Stages; not parallelizable)
     {
         double angle = -2*PI/len;
         Complex wlen(cos(angle), sin(angle));
-        for (int i = 0; i < N; i += len)
+        for (int i = 0; i < N; i += len) // Forwarding with a stride: parallelizable
         {
             Complex w(1);
             for (int j = 0; j < len/2; j++)

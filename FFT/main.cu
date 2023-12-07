@@ -1,6 +1,5 @@
 /*
- * 1-D FFT with Iterative Cooley-Tukey Algorithm
- * 
+ * Main Driver to Test FFT Methods 
  */
 
 #include <iostream>
@@ -13,12 +12,13 @@
 #include "./lib/iterative_CT.h" // iterative FFT
 #include "./lib/recursive_CT.h" // recursive FFt
 #include "./lib/fft2d.h"        // 2D FFT
+#include "./lib/fft1d_cuda.h"   // 1D FFT w. CUDA
 
 #include "./lib/loader.h"       // DataLoader
-#include "./lib/vec_utils.h"    // vector manipulations
 #include "./lib/eval_correctness.h" // subroutines to verify correctness
 #include "./lib/eval_performance.h" // subroutines to measure performance
-#include "./lib/timer.h"	    // timer
+//#include "./lib/timer.h"	    // timer
+//#include "./lib/vec_utils.h"    // vector manipulations
 using namespace std;
 
 typedef std::complex<double> Complex;
@@ -77,7 +77,7 @@ int main()
 	 * 		- fft_it_1d 		: 1D FFT Iterative Method
 	 *	 	- fft_re_1d			: 1D FFT Recursive Method
 	 * 		- fftw_1d_wrapper	: 1D FFT method from FFTW
-	 *		- 
+	 *		- fft1d_cu          : 1D FFT method w. CUDA
      *
      *
 	 * Available 2D FFT methods available for testing:
@@ -112,8 +112,11 @@ int main()
 				fft_re_1d, // FFT method to test
                 true, // if write toFile
                 "our1d_re.txt");// filename
-
 	*/
+    FFT1d_4Data(finger1,
+                fft1d_cu,
+                true,
+                "our1d_cu.txt");
 
     // ************* 2D FFT *************** //
     FFT2d_4Data(cifar10,
