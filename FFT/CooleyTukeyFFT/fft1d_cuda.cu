@@ -23,7 +23,7 @@ const double PI = 3.14159265358973238460
 // *** parallelization may not be worthy for small data size *** //
 // *** as the overhead of creating threads will outweigh the performance improvement *** //
 // *** and Coalesced Memory Accesses may not be guaranteed ** //
-__global__ bitReverse_kernel(Complex *d_x, int N){
+__global__ void bitReverse_kernel(Complex *d_x, int N){
     /*
      * (Effectively?) Reverse the Bits of a Vector
      *

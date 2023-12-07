@@ -11,7 +11,7 @@
 
 typedef std::complex<double> Complex;
 
-__global__ bitReverse_kernel(Complex *d_x, int N);
+__global__ void bitReverse_kernel(Complex *d_x, int N);
 
 // ###########################################
 
