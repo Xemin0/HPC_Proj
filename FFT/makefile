@@ -8,8 +8,11 @@ CXX = g++
 #CXXFLAGS = -Wall -std=c++11 -I/opt/homebrew/Cellar/fftw/3.3.10_1/include
 #LDFLAGS = -L/opt/homebrew/Cellar/fftw/3.3.10_1/lib -lfftw3
 
-CXXFLAGS = -Wall -std=c++11 -I/usr/local/Cellar/fftw/3.3.10_1/include
-LDFLAGS = -L/usr/local/Cellar/fftw/3.3.10_1/lib -lfftw3
+#CXXFLAGS = -Wall -std=c++11 -I/usr/local/Cellar/fftw/3.3.10_1/include
+#LDFLAGS = -L/usr/local/Cellar/fftw/3.3.10_1/lib -lfftw3
+
+CXXFLAGS = -Wall -std=c++11
+LDFLAGS = -lfftw3
 
 NVCCFLAGS = --arch sm_75
 
@@ -57,7 +60,7 @@ $(EXEC): $(OBJECTS)
 # Generic rule for building object files  #### No Need to Change
 # // Compiling For intemerdiate binary files with `-c`
 %.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@ 
+	$(CXX) $(CXXFLAGS) -c $< -o $@ $(LDFLAGS)
 
 # Special rule for .cu files
 %.o: %.cu

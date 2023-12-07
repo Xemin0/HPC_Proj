@@ -24,8 +24,8 @@
 # Check GPU info
 nvidia-smi
 
-# Load CUDA and gcc
-module load cuda/11.2.0 gcc/10.2
+# Load CUDA and gcc on Oscar
+module load cuda/11.2.0 gcc/10.2 fftw/3.3.6
 
 # Compile
 make all
