@@ -27,8 +27,8 @@ or `nsys profile ./It_CT.out` to profile with NVIDIA NSIGHT
 
 ## TO-DOS
 ### 1D FFT
-- Design Kernels For 1D FFT
-- Implement Kernel Launching Method for 1D FFT
+- ~Design Kernels For 1D FFT~
+- ~Implement Kernel Launching Method for 1D FFT~
 - Implement `eval_correctness` and `eval_performance` methods for CUDA
 
 ### 2D FFT
@@ -36,6 +36,9 @@ or `nsys profile ./It_CT.out` to profile with NVIDIA NSIGHT
 - ?? Directly Optimize 2D FFT after `bitReverse` step
 - Kernel Launching method
 - Correctness and Performance
+
+### Misc
+- `cudaCheck()`
 
 ### Primary Files to Work On
 - `CooleyTukeyFFT/*.cu`

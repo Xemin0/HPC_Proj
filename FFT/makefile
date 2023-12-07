@@ -34,7 +34,7 @@ SOURCES = $(SRC_DIR)/main.cu \
           $(CT_DIR)/iterative_CT.cpp \
           $(CT_DIR)/recursive_CT.cpp \
           $(CT_DIR)/fftw_wrapper.cpp \
-		  $(CT_DIR)/fft2d.cpp \ #### Add NewFiles Below this line: Presumably under $(CT_DIR)
+		  $(CT_DIR)/fft2d.cpp \ 
 		  $(CT_DIR)/fft1d_cuda.cu
 
 # Object files ## Include .cu files
