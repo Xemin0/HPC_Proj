@@ -37,7 +37,7 @@ float time_FFT1d_4Data(Dataset1D& ds, FuncPtr func)
 	/*
 	 * Time a single run of provided 1D FFT method over the whole dataset
 	 */
-	int rows, cols, depth;   
+    int rows, cols, depth;   
     ds.getDimensions(rows, cols, depth);
     //cout << "rows = " << rows << endl;
     //cout << "cols = " << cols << endl;
@@ -55,7 +55,7 @@ float time_FFT1d_4Data(Dataset1D& ds, FuncPtr func)
     // high precision timer 
     HighPrecisionTimer timer;
 
-	Complex tmp[truncated_cols];
+    Complex tmp[truncated_cols];
     // 1D FFT for each channel/column
     for (int i = 0; i < rows; i++) 
         for (int k = 0; k < depth; k++){ 
@@ -75,7 +75,7 @@ float time_FFT1d_4Data(Dataset1D& ds, FuncPtr func)
 			//tot_time += end - start;
             tot_time += timer.Elapsed();
         }  
-	return tot_time; 
+    return tot_time; 
 }
 
 float eval_FFT1d_4Data(Dataset1D& ds, FuncPtr func, 
