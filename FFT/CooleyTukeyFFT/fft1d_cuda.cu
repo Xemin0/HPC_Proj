@@ -21,7 +21,7 @@ const double PI = 3.14159265358973238460;
 // ### Utilities ### //
 __device__ cuDoubleComplex pow_cuDoubleComplex(cuDoubleComplex z, int n){
     double r = cuCabs(z); // Magnitude
-    double theta = atan2(cuCimg(z), cuCreal(z)); // Argument
+    double theta = atan2(cuCimag(z), cuCreal(z)); // Argument
 
     double rn = pow(r, n);
     double nTheta = n * theta;
