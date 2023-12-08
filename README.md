@@ -5,12 +5,13 @@
 
 **Make sure you have the following folders**
 - Data Files should be placed in `./FFT/Data/` 
-- Output results by methods from `/FFT/eval/` will be output to `/FFT/Data/Results`
+- Output results by methods from `/FFT/eval/` will be output to `/FFT/Data/Results/`
+- `test_cuda.sh` will output buffered printouts in `FFT/Data/Oscar/`
 
 ## Prerequisite
 - [FFTW C/C++ library](https://www.fftw.org/) for validating the results (not necessary)
     - `MacOS` installation: `brew install fftw`
-- Most likely a 'Turing Arch' GPU with `CUDA10.2.0` 
+- Most likely a 'Turing Arch' GPU with `CUDA11.2.0` 
 
 ## Compile with `FFTW` library
 *Change the `FFTW` library path as needed*
@@ -18,12 +19,14 @@
 ### Compilation with Makefile (recommended)
 In the `./FFT/` folder use the bash command `make`
 
+**May need to change `NVCCFLAG` for GPUs with different Compute Capabilities (CC), but no CC-specific CUDA API calls in current implementation**
+
 *If a fresh build is desired, simply run `make clean` before running `make` or `make all`*
 
 ## Run 
 `./It_CT.out`
 
-or `nsys profile ./It_CT.out` to profile with NVIDIA NSIGHT
+or `nsys profile ./It_CT.out` to profile with NVIDIA NSIGHT and run
 
 ## TO-DOS
 ### 1D FFT
@@ -46,5 +49,5 @@ or `nsys profile ./It_CT.out` to profile with NVIDIA NSIGHT
 - `eval/eval_correctness.cu`
 - `eval/eval_performance.cu`
 - Corresponding Headers
-- Makefile
-- `SLURM` script
+- ~Makefile~
+- ~`SLURM` script~
