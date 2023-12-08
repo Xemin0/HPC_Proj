@@ -109,7 +109,7 @@ float eval_FFT1d_4Data(Dataset1D& ds, FuncPtr func,
 
 	// Warm up runs
 	for (int i = 0; i < warmup; i++)
-		time_FFT1d_4Data(ds, func);
+		time_FFT1d_4Data(ds, func, isCPU);
 
 
 	// Recording times and take the average
@@ -213,7 +213,7 @@ float eval_FFT2d_4Data(Dataset2D& ds, FuncPtr2 func,
 
     // Warm up runs
     for (int i = 0; i < warmup; i++)
-        time_FFT2d_4Data(ds, func);
+        time_FFT2d_4Data(ds, func, isCPU);
 
 
     // Recording times and take the average
