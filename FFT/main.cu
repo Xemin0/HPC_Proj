@@ -74,9 +74,10 @@ int main()
     show_vec(vec, N);
 
     Complex *vec_it = (Complex*)malloc(N * sizeof(Complex));
+    copy_vec(vec, vec_it, N);
 
     fft1d_cu(vec, N);
-    cout << "without BF step:" << endl;
+    cout << "fft1d cuda:" << endl;
     show_vec(vec, N);
 
     fft_it_1d(vec_it, N);
