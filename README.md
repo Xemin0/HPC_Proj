@@ -34,6 +34,7 @@ or `nsys profile ./It_CT.out` to profile with NVIDIA NSIGHT and run
 - ~Implement Kernel Launching Method for 1D FFT~
 - ~Validate Correctness~
 - Implement `eval_correctness` and `eval_performance` methods for CUDA
+- Optimization for long vector FFT
 
 ### 2D FFT
 - ?? Design Kernels for 2D FFT (Nested Calls?)
@@ -48,6 +49,7 @@ or `nsys profile ./It_CT.out` to profile with NVIDIA NSIGHT and run
 - `CooleyTukeyFFT/*.cu`
 - `eval/eval_correctness.cu`
 - `eval/eval_performance.cu`
+- Separate CUDA Utilities
 - Corresponding Headers
 - ~Makefile~
 - ~`SLURM` script~
