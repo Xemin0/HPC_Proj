@@ -172,15 +172,14 @@ __global__ void fft1d_kernel(cuDoubleComplex *d_x, int N){
             int segment_start = segment_idx * len;
 
             cuDoubleComplex w = pow_cuDoubleComplex(wlen, local_tid);
-            printf("At segment_idx = %d, len = %d\n", segment_idx, len);
 
             int u_idx = segment_start + local_tid;
             int v_idx = u_idx + len/2;
-            printf("uid = %d, vid = %d\n\n", u_idx, v_idx);
 
             cuDoubleComplex u = (u_idx < N/2) ? x_shared0[u_idx] : x_shared1[u_idx - N/2];
             cuDoubleComplex v = (v_idx < N/2) ? cuCmul(x_shared0[v_idx], w) : cuCmul(x_shared1[v_idx - N/2], w);
 
+            printf("At segment_idx = %d, len = %d\n adding pair [u, v] = [(%f, %f), (%f, %f)] \n\n", segment_idx, len, cuCreal(u), cuCimag(u), cuCreal(v), cuCimag(v));
             if (u_idx < N/2)
                 x_shared0[u_idx] = cuCadd(u, v);
             else
