@@ -161,13 +161,12 @@ __global__ void fft1d_kernel(cuDoubleComplex *d_x, int N){
 
     __syncthreads();
 
-    /*
     // Each Stage
     for (int len = 2; len <= N; len <<= 1){
         double angle = -2 * PI / len;
         cuDoubleComplex wlen = make_cuDoubleComplex(cos(angle), sin(angle));
 
-        if (idx < N/2){ // boundary check for each thread ** half of threads are idling
+        if (idx < N/2){ // boundary check for each thread 
             int segment_idx = idx / (len/2); // len/2 threads for each segment
             int local_tid = idx % (len/2);
             int segment_start = segment_idx * len;
@@ -192,7 +191,6 @@ __global__ void fft1d_kernel(cuDoubleComplex *d_x, int N){
         }
         __syncthreads();
     }
-    */
 
     // Write back to Global Memory
     if (idx < N / 2){

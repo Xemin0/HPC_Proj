@@ -73,9 +73,15 @@ int main()
     cout << "Input vec:" << endl;
     show_vec(vec, N);
 
+    Complex *vec_it = Complex[N];
+
     fft1d_cu(vec, N);
     cout << "without BF step:" << endl;
     show_vec(vec, N);
+
+    fft_it_1d(vec_it, N);
+    cout << "it method:" << endl;
+    show_vec(vec_it, N);
     
 
     // ******** Testing Given DataSet ******* // 
