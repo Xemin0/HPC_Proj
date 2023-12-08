@@ -161,6 +161,7 @@ __global__ void fft1d_kernel(cuDoubleComplex *d_x, int N){
 
     __syncthreads();
 
+    /*
     // Each Stage
     for (int len = 2; len <= N; len <<= 1){
         double angle = -2 * PI / len;
@@ -191,6 +192,7 @@ __global__ void fft1d_kernel(cuDoubleComplex *d_x, int N){
         }
         __syncthreads();
     }
+    */
 
     // Write back to Global Memory
     if (idx < N / 2){
