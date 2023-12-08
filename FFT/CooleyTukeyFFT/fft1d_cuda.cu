@@ -68,8 +68,10 @@ __global__ void bitReverse_kernel(cuDoubleComplex *d_x, int N){
                 j |= (N >> (k+1));
 
         if (i < j){ // Swap elements at i and j
-            cuDoubleComplex tmp = d_x[i];
-            d_x[i] = d_x[j];
+            //cuDoubleComplex tmp = d_x[i];
+            //d_x[i] = d_x[j];
+            cuDoubleComplex tmp = pow_cuDoubleComplex(d_x[i], 2);
+            d_x[i] = pow_cuDoubleComplex(d_x[j], 2);
             d_x[j] = tmp;
         }
     }
