@@ -127,15 +127,15 @@ int main()
                 "our1d_fftw.txt");// filename
     */
     // Eval the Correctness of Recursive 1D FFT and output to a file
-    FFT1d_4Data(finger1, // Dataset
-				fft_re_1d, // FFT method to test
-                true, // if write toFile
-                "our1d_re.txt");// filename
+    //FFT1d_4Data(finger1, // Dataset
+	//			fft_re_1d, // FFT method to test
+    //            true, // if write toFile
+    //            "our1d_re.txt");// filename
 	
-    FFT1d_4Data(finger1,
-                fft1d_cu,
-                true,
-                "our1d_cu.txt");
+    //FFT1d_4Data(finger1,
+    //            fft1d_cu,
+    //            true,
+    //            "our1d_cu.txt");
 
     // ************* 2D FFT *************** //
     //FFT2d_4Data(cifar10,
