@@ -75,6 +75,8 @@ int main()
 
     Complex *vec_it = (Complex*)malloc(N * sizeof(Complex));
     copy_vec(vec, vec_it, N);
+    cout << "copied raw vec:" << endl;
+    show_vec(vec_it, N);
 
     fft1d_cu(vec, N);
     cout << "fft1d cuda:" << endl;
