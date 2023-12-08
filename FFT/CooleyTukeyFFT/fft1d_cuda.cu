@@ -68,10 +68,8 @@ __global__ void bitReverse_kernel(cuDoubleComplex *d_x, int N){
                 j |= (N >> (k+1));
 
         if (i < j){ // Swap elements at i and j
-            //cuDoubleComplex tmp = d_x[i];
-            //d_x[i] = d_x[j];
-            cuDoubleComplex tmp = pow_cuDoubleComplex(d_x[i], 2);
-            d_x[i] = pow_cuDoubleComplex(d_x[j], 2);
+            cuDoubleComplex tmp = d_x[i];
+            d_x[i] = d_x[j];
             d_x[j] = tmp;
         }
     }
@@ -244,7 +242,7 @@ void fft1d_cu(Complex *h_x, int N)
     last_cuda_error("Launching Kernel");
 
     // Copy back the result from DEVICE to HOST
-    cudaMemcpy(h_x, d_x, sizeof(cuDoubleComplex) * N, cudaMemcpyDeviceToHost);
+    cudaMemcpy(h_x, d_x, sizeof(Complex) * N, cudaMemcpyDeviceToHost);
     last_cuda_error("D2H");
 
     // Clean up
