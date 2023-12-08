@@ -73,7 +73,7 @@ int main()
     cout << "Input vec:" << endl;
     show_vec(vec, N);
 
-    Complex *vec_it = Complex[N];
+    Complex *vec_it = (Complex*)malloc(N * sizeof(Complex));
 
     fft1d_cu(vec, N);
     cout << "without BF step:" << endl;
