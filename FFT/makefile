@@ -30,7 +30,6 @@ EVAL_DIR = eval
 # Source files ## Add more modules
 SOURCES = $(SRC_DIR)/main.cu \
 		  $(DL_DIR)/loader.cpp \
-		  $(UTILS_DIR)/timer.cpp \
 		  $(UTILS_DIR)/vec_utils.cpp \
 		  $(EVAL_DIR)/eval_correctness.cpp \
 		  $(EVAL_DIR)/eval_performance.cu \
@@ -40,8 +39,12 @@ SOURCES = $(SRC_DIR)/main.cu \
 		  $(CT_DIR)/fft2d.cpp \
 		  $(CT_DIR)/fft1d_cuda.cu
 
+# Separate .cpp and .cu
+CPP_SOURCES = $(filter %.cpp, $(SOURCES))
+CU_SOURCES = $(filter %.cu, $(SOURCES))
+
 # Object files ## Include .cu files
-OBJECTS = $(SOURCES:.cpp=.o) $(SOURCES:.cu=.o)
+OBJECTS = $(CPP_SOURCES:.cpp=.o) $(CU_SOURCES:.cu=.o)
 
 # Executable name ## No Need to Change unless renaming is necessary
 EXEC = It_CT.out

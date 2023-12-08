@@ -8,6 +8,7 @@
  */
 
 #pragma once
+
 #include <cuComplex.h>
 
 typedef std::complex<double> Complex;
