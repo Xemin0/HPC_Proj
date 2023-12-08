@@ -49,7 +49,7 @@ void fft_it_1d(Complex *x, int N)
             {
                 cout << "local tid = " << j << endl;
 
-                cout << "wlen = (" << wlen.real() << "," << wlen.imag() << "), w = (" << w.real() << "," << w.imag() << ")" << endl;
+                cout << "uid = " << i + j << ", vid = " << i + j + len/2 << endl;
                 cout << endl;
                 Complex u = x[i+j];
                 Complex v = x[i + j + len/2]*w;
