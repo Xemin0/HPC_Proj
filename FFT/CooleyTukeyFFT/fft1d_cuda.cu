@@ -247,7 +247,7 @@ void fft1d_cu(Complex *h_x, int N)
     // Copy back the result from DEVICE to HOST
     cudaMemcpy(h_x, d_x, sizeof(Complex) * N, cudaMemcpyDeviceToHost);
     last_cuda_error("D2H");
-    fprintf(stderr, "N = %i\n", N);
+    //fprintf(stderr, "N = %i\n", N);
 
     // Clean up
     cudaFree(d_x);
