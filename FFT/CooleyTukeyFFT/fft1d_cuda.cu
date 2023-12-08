@@ -238,7 +238,11 @@ void fft1d_cu(Complex *h_x, int N)
 
     // Launch the Kernel
     fft1d_device(d_x, N);
+    cudaError_t err = cudaDeviceSynchronize();
+    if (err != cudaSuccess)
+        fprintf(stderr, "Error after Kernel and Sync: %s\n", cudaGetErrorString(err));
     last_cuda_error("Launching Kernel");
+    
 
     // Copy back the result from DEVICE to HOST
     cudaMemcpy(h_x, d_x, sizeof(Complex) * N, cudaMemcpyDeviceToHost);
