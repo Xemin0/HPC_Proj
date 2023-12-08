@@ -229,7 +229,7 @@ void fft1d_cu(Complex *h_x, int N)
      */
     // Allocate memory on DEVICE
     cuDoubleComplex *d_x;
-    cudaMalloc( (void**) &d_x, sizeof(cuDoubleComplex)*N, cudaHostAllocDefault );
+    cudaMalloc( (void**) &d_x, sizeof(cuDoubleComplex)*N);
     last_cuda_error("Malloc for d_x");
 
     // Copy the vector from HOST to DEVICE

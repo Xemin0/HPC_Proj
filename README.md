@@ -44,12 +44,13 @@ or `nsys profile ./It_CT.out` to profile with NVIDIA NSIGHT and run
 
 ### Misc
 - `cudaCheck()`
+- Separate CUDA Utilities
+- Add data processing and memory allocation utils for CUDA
 
 ### Primary Files to Work On
 - `CooleyTukeyFFT/*.cu`
 - `eval/eval_correctness.cu`
 - `eval/eval_performance.cu`
-- Separate CUDA Utilities
 - Corresponding Headers
 - ~Makefile~
 - ~`SLURM` script~
