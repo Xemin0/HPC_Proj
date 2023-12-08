@@ -188,7 +188,7 @@ __global__ void fft1d_kernel(cuDoubleComplex *d_x, int N){
             if (v_idx < N/2)
                 x_shared0[v_idx] = cuCsub(u, v);
             else
-                x_shared1[v_idx] = cuCsub(u, v);
+                x_shared1[v_idx - N/2] = cuCsub(u, v);
         }
         __syncthreads();
     }
