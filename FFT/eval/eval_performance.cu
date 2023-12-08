@@ -32,7 +32,7 @@ typedef void (*FuncPtr2)(Complex**, int, int);   // for 2D FFT methods
 
 // ********** 1D FFT Performance Evaluation *********** //
 
-float time_FFT1d_4Data(Dataset1D& ds, FuncPtr func)
+float time_FFT1d_4Data(Dataset1D& ds, FuncPtr func, bool isCPU) // ## May need to return HighPrecisionTimer object
 {
 	/*
 	 * Time a single run of provided 1D FFT method over the whole dataset
@@ -73,12 +73,13 @@ float time_FFT1d_4Data(Dataset1D& ds, FuncPtr func)
 
 			// Aggregate the timed result
 			//tot_time += end - start;
-            tot_time += timer.Elapsed();
+            tot_time += timer.Elapsed(isCPU);
         }  
     return tot_time; 
 }
 
-float eval_FFT1d_4Data(Dataset1D& ds, FuncPtr func, 
+float eval_FFT1d_4Data(Dataset1D& ds, FuncPtr func,
+                      bool isCPU,
 					  int warmup, int testruns,
 					  bool toFile, std::string filename)
 {
@@ -113,7 +114,7 @@ float eval_FFT1d_4Data(Dataset1D& ds, FuncPtr func,
 
 	// Recording times and take the average
 	for (int i = 0; i < testruns; i++)
-		avg_t += time_FFT1d_4Data(ds, func);
+		avg_t += time_FFT1d_4Data(ds, func, isCPU);
 
 	avg_t /= testruns;
 
@@ -128,7 +129,7 @@ float eval_FFT1d_4Data(Dataset1D& ds, FuncPtr func,
 
 // ********** 2D FFT Performance Evaluation *********** //
 
-float time_FFT2d_4Data(Dataset2D& ds, FuncPtr2 func)
+float time_FFT2d_4Data(Dataset2D& ds, FuncPtr2 func, bool isCPU)
 {
     /*  
      * Time a single run of provided 2D FFT method over the whole dataset
@@ -175,13 +176,14 @@ float time_FFT2d_4Data(Dataset2D& ds, FuncPtr2 func)
 
         // Aggregate the timed result
         //tot_time += end - start;
-        tot_time += timer.Elapsed();
+        tot_time += timer.Elapsed(isCPU);
     }   
     return tot_time; 
 }
 
 
 float eval_FFT2d_4Data(Dataset2D& ds, FuncPtr2 func, 
+                      bool isCPU,
                       int warmup, int testruns,
                       bool toFile, std::string filename)
 {
@@ -216,7 +218,7 @@ float eval_FFT2d_4Data(Dataset2D& ds, FuncPtr2 func,
 
     // Recording times and take the average
     for (int i = 0; i < testruns; i++)
-        avg_t += time_FFT2d_4Data(ds, func);
+        avg_t += time_FFT2d_4Data(ds, func, isCPU);
 
     avg_t /= testruns;
 

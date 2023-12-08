@@ -117,36 +117,43 @@ int main()
     // ************* 1D FFT *************** //
 
     // Eval the Correctness of Iterative 1D FFT and output to a file
-    FFT1d_4Data(finger1, // Dataset
-	 			fft_it_1d, // FFT method to test
-                true, // if write toFile
-                "our1d_it.txt");// filename
+    //FFT1d_4Data(finger1, // Dataset
+	// 			fft_it_1d, // FFT method to test
+    //            true,    // CPU time
+    //            true, // if write toFile
+    //            "our1d_it.txt");// filename
     /*
     // Eval the Correctness of FFTW's 1D FFT and output to a file
     FFT1d_4Data(finger1, // Dataset
                 fftw_1d_wrapper, // FFT method to test
+                true,    // CPU time
                 true, // if write toFile
                 "our1d_fftw.txt");// filename
     */
     // Eval the Correctness of Recursive 1D FFT and output to a file
     //FFT1d_4Data(finger1, // Dataset
 	//			fft_re_1d, // FFT method to test
+    //            true,    // CPU time
     //            true, // if write toFile
     //            "our1d_re.txt");// filename
 	
-    FFT1d_4Data(finger1,
-                fft1d_cu,
-                true,
-                "our1d_cu.txt");
+    // Eval the Correctness of 1D FFT with CUDA and output to a file
+    //FFT1d_4Data(finger1,
+    //            fft1d_cu,
+    //            true,    // CPU time
+    //            true,
+    //            "our1d_cu.txt");
 
     // ************* 2D FFT *************** //
     //FFT2d_4Data(cifar10,
     //            fftw_2d_wrapper,
+    //            true,    // CPU time
     //            true,
     //            "out2d_fftw.txt");
 
     //FFT2d_4Data(cifar10,
     //            fft_2d,
+    //            true,    // CPU time
     //            true,
     //            "out2d_custom.txt");
 
@@ -158,19 +165,38 @@ int main()
     // ************* 1D FFT *************** //
 
 	// Eval the Average Time Performing Iterative 1D FFT and output to a file
-	// eval_FFT1d_4Data(finger1,	// Dataset
-	// 				 fft_it_1d, // FFT method to test
-	// 				 2,			// warm up runs (excluded in eval)
-	// 				 5,			// testruns to take the average of
-	// 				 true,		// if write to file
-	// 				 "our1d_iter"); // base filename
+	eval_FFT1d_4Data(finger1,	// Dataset
+	 				 fft_it_1d, // FFT method to test
+                     true,    // CPU time
+	 				 2,			// warm up runs (excluded in eval)
+	 				 5,			// testruns to take the average of
+	 				 true,		// if write to file
+	 				 "our1d_iter"); // base filename
 
+	// Eval the Average Time Performing 1D FFT with CUDA and output to a file
+	eval_FFT1d_4Data(finger1,	// Dataset
+	 				 fft1d_cu, // FFT method to test
+                     true,    // CPU time
+	 				 2,			// warm up runs (excluded in eval)
+	 				 5,			// testruns to take the average of
+	 				 true,		// if write to file
+	 				 "our1d_cu"); // base filename
+
+	// Eval the Average Time Performing 1D FFT with CUDA and output to a file
+	eval_FFT1d_4Data(finger1,	// Dataset
+	 				 fftw_1d_wrapper, // FFT method to test
+                     true,    // CPU time
+	 				 2,			// warm up runs (excluded in eval)
+	 				 5,			// testruns to take the average of
+	 				 true,		// if write to file
+	 				 "our1d_fftw"); // base filename
 
     // ************* 2D FFT *************** //
 
 	// Eval the Average Time Performing Iterative 1D FFT and output to a file
 	//eval_FFT2d_4Data(cifar10,	// Dataset
 	//				 fft_2d,     // FFT method to test
+    //               true,    // CPU time
 	//				 2,			// warm up runs (excluded in eval)
 	//				 5,			// testruns to take the average of
 	//				 true,		// if write to file
