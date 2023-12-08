@@ -161,7 +161,6 @@ __global__ void fft1d_kernel(cuDoubleComplex *d_x, int N){
 
     __syncthreads();
 
-    /*
     // Each Stage
     for (int len = 2; len <= N; len <<= 1){
         double angle = -2 * PI / len;
@@ -192,7 +191,6 @@ __global__ void fft1d_kernel(cuDoubleComplex *d_x, int N){
         }
         __syncthreads();
     }
-    */
 
     // Write back to Global Memory
     if (idx < N / 2){
@@ -245,6 +243,7 @@ void fft1d_cu(Complex *h_x, int N)
     // Copy back the result from DEVICE to HOST
     cudaMemcpy(h_x, d_x, sizeof(Complex) * N, cudaMemcpyDeviceToHost);
     last_cuda_error("D2H");
+    fprintf(stderr, "N = %i\n", N);
 
     // Clean up
     cudaFree(d_x);
