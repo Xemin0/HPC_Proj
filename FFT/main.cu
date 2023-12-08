@@ -180,7 +180,7 @@ int main()
 	 				 2,			// warm up runs (excluded in eval)
 	 				 5,			// testruns to take the average of
 	 				 true,		// if write to file
-	 				 "our1d_cu"); // base filename
+	 				 "our1d_cu_cpu"); // base filename
 
 	// (GPU) Eval the Average Time Performing 1D FFT with CUDA and output to a file
 	eval_FFT1d_4Data(finger1,	// Dataset
@@ -189,7 +189,7 @@ int main()
 	 				 2,			// warm up runs (excluded in eval)
 	 				 5,			// testruns to take the average of
 	 				 true,		// if write to file
-	 				 "our1d_cu"); // base filename
+	 				 "our1d_cu_gpu"); // base filename
 
 	// Eval the Average Time Performing 1D FFT with CUDA and output to a file
 	eval_FFT1d_4Data(finger1,	// Dataset
