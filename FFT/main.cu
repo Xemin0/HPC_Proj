@@ -82,6 +82,8 @@ int main()
     cout << "fft1d cuda:" << endl;
     show_vec(vec, N);
 
+    cout << "===================" << endl;
+
     fft_it_1d(vec_it, N);
     cout << "it method:" << endl;
     show_vec(vec_it, N);

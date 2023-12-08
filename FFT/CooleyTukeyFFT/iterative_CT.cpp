@@ -7,6 +7,8 @@
 #include <complex>
 #include <cmath>
 
+#include <iostream>
+
 using namespace std;
 
 typedef std::complex<double> Complex;
@@ -41,9 +43,14 @@ void fft_it_1d(Complex *x, int N)
         Complex wlen(cos(angle), sin(angle));
         for (int i = 0; i < N; i += len) // Forwarding with a stride: parallelizable
         {
+            cout << "for len = " << len << "At segment Idx = " << i << endl;
             Complex w(1);
             for (int j = 0; j < len/2; j++)
             {
+                cout << "local tid = " << j << endl;
+
+                cout << "wlen = (" << wlen.real() << "," << wlen.imag() << "), w = (" << w.real() << "," << w.imag() << ")" << endl;
+                cout << endl;
                 Complex u = x[i+j];
                 Complex v = x[i + j + len/2]*w;
                 x[i+j] = u + v;
