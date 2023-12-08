@@ -18,7 +18,7 @@
 #include "./lib/eval_correctness.h" // subroutines to verify correctness
 #include "./lib/eval_performance.h" // subroutines to measure performance
 //#include "./lib/timer.h"	    // timer
-//#include "./lib/vec_utils.h"    // vector manipulations
+#include "./lib/vec_utils.h"    // vector manipulations
 using namespace std;
 
 typedef std::complex<double> Complex;
@@ -68,6 +68,15 @@ int main()
     free(vec_fftw);
 	*/
 
+    int N = 8;
+    Complex *vec = rand_vec(N);
+    cout << "Input vec:" << endl;
+    show_vec(vec, N);
+
+    bitReverse_cu(vec, N);
+    cout << "Bit Reversed vec:" << endl;
+    show_vec(vec, N);
+    
 
     // ******** Testing Given DataSet ******* // 
 

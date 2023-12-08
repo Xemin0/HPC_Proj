@@ -20,6 +20,9 @@ void last_cuda_error(std::string event);
 
 __global__ void bitReverse_kernel(cuDoubleComplex *d_x, int N);
 
+void bitReverse_device(cuDoubleComplex *d_x, int N);
+
+void bitReverse_cu(Complex *h_x, int N);
 // ###########################################
 
 __global__ void fft1d_kernel(cuDoubleComplex *d_x, int N);

@@ -92,7 +92,7 @@ $(CT_DIR)/fft1d_cuda.o: $(LIB_DIR)/fft1d_cuda.h		# 1D FFT w. CUDA
 
 # Main Driver #### No Need to Change
 #				   $(LIB_DIR)/timer.h $(LIB_DIR)/vec_utils.h \
-$(SRC_DIR)/main.o: $(LIB_DIR)/loader.h \
+$(SRC_DIR)/main.o: $(LIB_DIR)/loader.h $(LIB_DIR)/vec_utils.h \
 				   $(LIB_DIR)/eval_correctness.h $(LIB_DIR)/eval_performance.h \
 				   $(LIB_DIR)/iterative_CT.h $(LIB_DIR)/recursive_CT.h \
 				   $(LIB_DIR)/fftw_wrapper.h $(LIB_DIR)/fft2d.h \

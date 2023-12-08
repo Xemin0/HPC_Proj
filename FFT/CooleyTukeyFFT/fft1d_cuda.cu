@@ -75,6 +75,31 @@ __global__ void bitReverse_kernel(cuDoubleComplex *d_x, int N){
     }
 }
 
+void bitReverse_device(cuDoubleComplex *d_x, int N)
+{
+    dim3 nthreads(N / 2, 1, 1);
+    dim3 nblocks(1, 1, 1);
+
+    bitReverse_kernel <<< nblocks, nthreads, 0, 0 >>> (d_x, N);
+}
+
+void bitReverse_cu(Complex *h_x, int N){
+    cuDoubleComplex *d_x;
+    cudaMalloc( (void**) &d_x, sizeof(cuDoubleComplex)*N);
+    last_cuda_error("Malloc BR");
+
+    cudaMemcpy(d_x, h_x, sizeof(cuDoubleComplex) * N, cudaMemcpyHostToDevice);
+    last_cuda_error("BR H2D");
+
+    bitReverse_device(d_x, N);
+    last_cuda_error("BR Kernel");
+
+    cudaMemcpy(h_x, d_x, sizeof(Complex) * N, cudaMemcpyDeviceToHost);
+    last_cuda_error("BR D2H");
+
+    cudaFree(d_x);
+}
+
 // The Corresponding Kernel Launching Method
 
 
@@ -164,9 +189,9 @@ __global__ void fft1d_kernel(cuDoubleComplex *d_x, int N){
             else
                 x_shared1[v_idx] = cuCsub(u, v);
         }
+        __syncthreads();
     }
 
-    __syncthreads();
 
     // Write back to Global Memory
     if (idx < N / 2){
