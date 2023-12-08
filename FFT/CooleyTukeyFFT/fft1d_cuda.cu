@@ -99,6 +99,8 @@ __global__ void fft1d_kernel(cuDoubleComplex *d_x, int N){
             d_x[j] = tmp;
         }
     }
+
+    __syncthreads();
     // ###
     // Butterfly Step (Reworked from the Original Iterative Method)
     // ###
