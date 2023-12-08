@@ -86,6 +86,7 @@ int main()
     cout << "it method:" << endl;
     show_vec(vec_it, N);
     
+    cout << "end of individual test" << endl;
 
     // ******** Testing Given DataSet ******* // 
 
