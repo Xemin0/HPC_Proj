@@ -67,7 +67,7 @@ int main()
     free(vec);
     free(vec_fftw);
 	*/
-
+    /*
     int N = 8;
     Complex *vec = rand_vec(N);
     cout << "Input vec:" << endl;
@@ -89,7 +89,7 @@ int main()
     show_vec(vec_it, N);
     
     cout << "end of individual test" << endl;
-
+    */
     // ******** Testing Given DataSet ******* // 
 
 	/*
@@ -117,10 +117,10 @@ int main()
     // ************* 1D FFT *************** //
 
     // Eval the Correctness of Iterative 1D FFT and output to a file
-    // FFT1d_4Data(finger1, // Dataset
-	// 			fft_it_1d, // FFT method to test
-    //             true, // if write toFile
-    //             "our1d_it.txt");// filename
+    FFT1d_4Data(finger1, // Dataset
+	 			fft_it_1d, // FFT method to test
+                true, // if write toFile
+                "our1d_it.txt");// filename
     /*
     // Eval the Correctness of FFTW's 1D FFT and output to a file
     FFT1d_4Data(finger1, // Dataset
@@ -134,10 +134,10 @@ int main()
     //            true, // if write toFile
     //            "our1d_re.txt");// filename
 	
-    //FFT1d_4Data(finger1,
-    //            fft1d_cu,
-    //            true,
-    //            "our1d_cu.txt");
+    FFT1d_4Data(finger1,
+                fft1d_cu,
+                true,
+                "our1d_cu.txt");
 
     // ************* 2D FFT *************** //
     //FFT2d_4Data(cifar10,
