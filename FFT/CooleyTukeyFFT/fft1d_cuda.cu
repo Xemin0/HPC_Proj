@@ -229,7 +229,7 @@ void fft1d_cu(Complex *h_x, int N)
      */
     // Allocate memory on DEVICE
     cuDoubleComplex *d_x;
-    cudaHostAlloc( (void**) &d_x, sizeof(cuDoubleComplex)*N, cudaHostAllocDefault );
+    cudaMalloc( (void**) &d_x, sizeof(cuDoubleComplex)*N, cudaHostAllocDefault );
     last_cuda_error("Malloc for d_x");
 
     // Copy the vector from HOST to DEVICE
@@ -238,9 +238,11 @@ void fft1d_cu(Complex *h_x, int N)
 
     // Launch the Kernel
     fft1d_device(d_x, N);
+    /*
     cudaError_t err = cudaDeviceSynchronize();
     if (err != cudaSuccess)
         fprintf(stderr, "Error after Kernel and Sync: %s\n", cudaGetErrorString(err));
+     */
     last_cuda_error("Launching Kernel");
     
 
