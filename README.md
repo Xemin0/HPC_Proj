@@ -10,17 +10,21 @@ flowchart TD
 	A
 	end
 	A{is Parallelizable?}
-	Y[["`**Distribution of Work**
-	**Memory Access Pattern**
-	**Occupancy/Device Usage**`"]]
+	Y[["Distribution of Work
+	Memory Access Pattern
+	Occupancy/Device Usage"]]
 	A -->|Independency-YES| Y
-	A --> |Dependencies-Maybe NO?| M{{"`Requires
+	A --> |Dependencies-Maybe NO?| M{{"Requires
 	 Synchronizations
-	 Barriers`"}}
+	 Barriers"}}
 	subgraph machine [KNOW UR MACHINE]
 	Y
 	M
 	end
+
+    style Y fill:#f6f,stroke:#333,stroke-width:4px
+	style M fill:#f6f,stroke:#333,stroke-width:4px
+	style A fill:#99d,stroke:#f66,stroke-width:2px
 ```
 
 ## File Structure
