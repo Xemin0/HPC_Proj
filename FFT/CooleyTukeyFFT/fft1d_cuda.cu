@@ -122,6 +122,7 @@ __global__ void fft1d_kernel(cuDoubleComplex *d_x, int N){
 
     // Tiling
     // less likely, but just in case the total number of threads = stride < N
+    #pragma unroll
     for (int i = startIdx; i < N - 1; i += stride){
         int j = 0;
         for (int k = 0; k < __log2f(N); ++k) // for each bit
@@ -149,7 +150,7 @@ __global__ void fft1d_kernel(cuDoubleComplex *d_x, int N){
      */
     int idx = blockIdx.x * blockDim.x + threadIdx.x; // ### blockDim.x = N/2 with one Block
 
-    extern __shared__ cuDoubleComplex sharedMem[];
+    extern __shared__ cuDoubleComplex *sharedMem;
     cuDoubleComplex *x_shared0 = sharedMem;             // shared memory for d_x First Half
     cuDoubleComplex *x_shared1 = sharedMem + blockDim.x;// shared memory for d_x Second Half
 

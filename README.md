@@ -1,7 +1,30 @@
 # Parallelizing 2D Fast-Fourier Transform Implemented with Cooley-Tukey Algorithm Using CUDA
 
+## Decision Making in Parallelizing an Algorithm
+```mermaid
+flowchart TD
+	N[Rewrite the Algorithm] --> A
+	A --> |Def NO| N
+	subgraph code [KNOW UR CODE]
+	N
+	A
+	end
+	A{is Parallelizable?}
+	Y[["`**Distribution of Work**
+	**Memory Access Pattern**
+	**Occupancy/Device Usage**`"]]
+	A -->|Independency-YES| Y
+	A --> |Dependencies-Maybe NO?| M{{"`Requires
+	 Synchronizations
+	 Barriers`"}}
+	subgraph machine [KNOW UR MACHINE]
+	Y
+	M
+	end
+```
+
 ## File Structure
-**Each folder has (and will have) its respective `readme` describing what type of modules should be placed inside**
+**Each folder has (and will have) its respective `README` describing what type of modules should be placed inside**
 
 **Make sure you have the following folders**
 - Data Files should be placed in `./FFT/Data/` 
@@ -46,6 +69,7 @@ or `nsys profile ./It_CT.out` to profile with NVIDIA NSIGHT and run
 - `cudaCheck()`
 - Separate CUDA Utilities
 - Add data processing and memory allocation utils for CUDA
+- Implement testing subroutines for CUDA method (`cudaMalloc` and `cudaFree` waste alot of time between kernel calls)
 
 ### Primary Files to Work On
 - `CooleyTukeyFFT/*.cu`
