@@ -69,11 +69,11 @@ or `nsys profile ./It_CT.out` to profile with NVIDIA NSIGHT and run
 
 ### 2D FFT
 A couple implementation details to consider
-- For effective data exchanges among a 2D thread BLOCK, may need to implement 2D FFT from scratch without sequential 
+- For effective data exchanges among a 2D thread BLOCK, may need to implement 2D FFT from scratch without sequential subKernel Calls
 - Alternatively, offload row-wise 1D FFT calls to CUDA Streams before writing to the global memory for later column-wise 1D FFTs
 
 ### Performance Evaluation Workflow for CUDA Methods
-- As `cudaMalloc` and `cudaFree` take up ridiculous amount of time compared to kernels, for larger datasets, consider reusing device memories that have been allocated or group up CUDA API calls of the same type (Memory Allocation v.s. Kernel Launching v.s. Reclaiming Memories)
+- As `cudaMalloc` and `cudaFree` take up **RIDICULOUS** amount of time compared to kernels, for larger datasets, consider reusing device memories that have been allocated or group up CUDA API calls of the same type (Memory Allocation v.s. Kernel Launching v.s. Reclaiming Memories)
     - Larger in Vector/Matrix Sizes
     - Larger in the Number of Samples
 
