@@ -43,11 +43,6 @@ flowchart TD
 ## Compile with `FFTW` library
 *Change the `FFTW` library path as needed*
 
-## Manual Compilation
-Navigate to `./FFT/` Folder then run the following bash command
-
-~`g++-13 ./data_loader/loader.cpp main.cpp -o It_CT.o -I/usr/local/Cellar/fftw/3.3.10_1/include -L/usr/local/Cellar/fftw/3.3.10_1/lib -lfftw3`~
-
 ### Compilation with Makefile (recommended)
 In the `./FFT/` folder use the bash command `make`
 
