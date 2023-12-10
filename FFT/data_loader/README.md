@@ -1,4 +1,4 @@
-## Data Loader 
+## Data Loader                                                                                 
 
 Reading data from a specified path (root path at ./Data folder) as an Dataset class object
 
@@ -12,9 +12,9 @@ Reading data from a specified path (root path at ./Data folder) as an Dataset cl
         - Depth: number of trials for each channel
 - 2D Data (CIFAR10)
     - Indices starting from 0
-    - Data loaded as 
+    - Data loaded as  
         - RGB values of 1D array (Row-Major)
-        - Converted to grayscale image with pixel values ranging from 0 to 255
+        - Converted to grayscale image with pixel values ranging from 0 to 255 
     - Dimensions:
         - Rows      : Height
         - Cols      : Width
