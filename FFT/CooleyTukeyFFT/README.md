@@ -3,9 +3,9 @@
 ## 1-D FFT
 #### List of Methods Available
 
-- the Recursive method
-- the Iterative method
-- the Wrapper function for FFT method from FFTW library
+- `fft_re_1d`: the Recursive method
+- `fft_it_1d`: the Iterative method
+- `fft2_1d_wrapper`: the Wrapper function for 1D FFT method from FFTW library
 
 *Recommended format*
 
@@ -19,3 +19,5 @@ the FFT result will be stored in the original `vec`
 
 #### 2-D FFT
 #### List of Methods Available
+- `fft_2d`: 2D method by calling 1D Iterative method
+- `fft_2d_wrapper`: the Wrapper function 2D FFT method from FFTW
