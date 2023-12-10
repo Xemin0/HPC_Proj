@@ -77,6 +77,6 @@ In the `./FFT/` folder use the bash command `make`
 ### Progress Table
 ||OpenMP | MPI | CUDA|
 |:--:|:---:|:---:|:---:|
-|1D FFT|:white_check_mark:|Not Considering| :heavy_check_mark:|
-|2D FFT|:white_check_mark:|:x:|:x:|
-|Performance Eval Subroutines|:white_check_mark:|:white_check_mark:|:x:|
+|1D FFT|:heavy_check_mark:|Not Considering| :white_check_mark:|
+|2D FFT|:heavy_check_mark:|:x:|:x:|
+|Performance Eval Subroutines|:heavy_check_mark:|:heavy_check_mark:|:x:|
