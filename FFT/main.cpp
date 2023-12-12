@@ -82,7 +82,7 @@ int main()
      *
 	 * Available 2D FFT methods available for testing:
      * 
-     *      - fft2d             : 2D FFT
+     *      - fft_2d            : 2D FFT
      *      - fftw_2d_wrapper   : 2D FFT method from FFTW
      *      - 
 	 */
