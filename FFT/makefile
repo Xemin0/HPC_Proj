@@ -14,7 +14,7 @@ CXX = g++
 CXXFLAGS = -std=c++11
 LDFLAGS = -lfftw3
 
-NVCCFLAGS = -arch sm_75 -dc
+NVCCFLAGS = -arch sm_75
 
 
 
@@ -51,17 +51,7 @@ OBJECTS = $(CPP_SOURCES:.cpp=.o) $(CU_SOURCES:.cu=.o)
 # Executable name ## No Need to Change unless renaming is necessary
 EXEC = It_CT.out
 
-# Default target ## No Need to Change
-all: $(EXEC)
-	@echo "Build Successful!"
-	rm -f $(OBJECTS) 		# Remove intermediate .o files
-
-# // Linking 
-#### Append Compiling Flags as Needed, e.g. OpenMP, MPI, CUDA
-#### Change the Compiler as Needed, e.g. MPI, CUDA
-$(EXEC): $(OBJECTS)
-	$(NVCC) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
-
+#####
 # Generic rule for building object files  #### No Need to Change
 # // Compiling For intemerdiate binary files with `-c`
 %.o: %.cpp
@@ -69,8 +59,26 @@ $(EXEC): $(OBJECTS)
 
 # Special rule for .cu files
 %.o: %.cu
-	$(NVCC) $(NVCCFLAGS) -c $< -o $@
+	$(NVCC) $(NVCCFLAGS) -dc $< -o $@
 
+####
+# Device Linking
+device_link.o: $(CU_SOURCES:.cu=.o)
+	$(NVCC) $(NVCCFLAGS) -dlink $^ -o $@
+
+# // Final Executable 
+#### Append Compiling Flags as Needed, e.g. OpenMP, MPI, CUDA
+#### Change the Compiler as Needed, e.g. MPI, CUDA
+$(EXEC): $(OBJECTS) device_link.o
+	$(NVCC) $(NVCCFLAGS) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+
+# Default target ## No Need to Change
+all: $(EXEC)
+	@echo "Build Successful!"
+	rm -f $(OBJECTS) device_link.o		# Remove intermediate .o files
+
+
+#######
 # Clean up #### No Need to Change
 clean:
 	rm -f $(OBJECTS) $(EXEC)
