@@ -14,10 +14,6 @@
 
 typedef std::complex<double> Complex;
 
-__device__ cuDoubleComplex pow_cuDoubleComplex(cuDoubleComplex z, int n);
-
-void last_cuda_error(std::string event);
-
 __global__ void bitReverse_kernel(cuDoubleComplex *d_x, int N);
 
 void bitReverse_device(cuDoubleComplex *d_x, int N);
