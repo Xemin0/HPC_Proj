@@ -9,4 +9,4 @@
 
 void last_cuda_error(std::string event);
 
-#endif /* LIB_CUDA_CHECK_H_
+#endif /* LIB_CUDA_CHECK_H_ */
