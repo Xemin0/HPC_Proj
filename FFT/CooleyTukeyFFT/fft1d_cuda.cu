@@ -8,11 +8,13 @@
 
 #include <cuda.h>
 #include <cuComplex.h>
-#include <string>
+//#include <string>
 #include <stdlib.h>
 #include <stdio.h>
 
 #include "../lib/iterative_CT.h"
+#include "../lib/cuda_math.h"
+#include "../lib/cuda_check.h"
 
 #define BLOCK_SIZE 64 // *** Subject to Change
 #define WARP_SIZE 32
@@ -20,24 +22,6 @@
 
 typedef std::complex<double> Complex;
 const double PI = 3.14159265358973238460;
-
-// ### Utilities ### //
-__device__ cuDoubleComplex pow_cuDoubleComplex(cuDoubleComplex z, int n){
-    double r = cuCabs(z); // Magnitude
-    double theta = atan2(cuCimag(z), cuCreal(z)); // Argument
-
-    double rn = pow(r, n);
-    double nTheta = n * theta;
-
-    return make_cuDoubleComplex(rn * cos(nTheta), rn * sin(nTheta));
-}
-
-void last_cuda_error(std::string event)
-{
-    cudaError_t err = cudaGetLastError();
-    if (cudaSuccess != err)
-        fprintf(stderr, "CUDA Error at %s: %s\n", event.c_str(), cudaGetErrorString(err));
-}
 
 // ###########################################
 

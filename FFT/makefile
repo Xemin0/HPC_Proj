@@ -31,6 +31,8 @@ EVAL_DIR = eval
 SOURCES = $(SRC_DIR)/main.cu \
 		  $(DL_DIR)/loader.cpp \
 		  $(UTILS_DIR)/vec_utils.cpp \
+		  $(UTILS_DIR)/cuda_math.cu \
+		  $(UTILS_DIR)/cuda_check.cu \
 		  $(EVAL_DIR)/eval_correctness.cpp \
 		  $(EVAL_DIR)/eval_performance.cu \
 		  $(CT_DIR)/iterative_CT.cpp \
@@ -79,6 +81,8 @@ clean:
 $(DL_DIR)/loader.o: $(LIB_DIR)/loader.h 			# Data loader
 #$(UTILS_DIR)/timer.o: $(LIB_DIR)/timer.h 			# CPU/GPU timer
 $(UTILS_DIR)/vec_utils.o: $(LIB_DIR)/vec_utils.h	# Vector manipulations
+$(UTILS_DIR)/cuda_math.o: $(LIB_DIR)/cuda_math.h	# CUDA Math operations
+$(UTILS_DIR)/cuda_check.o: $(LIB_DIR)/cuda_check.h	# CUDA Debug Utils
 $(EVAL_DIR)/eval_correctness.o: $(LIB_DIR)/eval_correctness.h	# Validation of Correctness
 $(EVAL_DIR)/eval_performance.o: $(LIB_DIR)/eval_performance.h	# Validation of Performance
 
