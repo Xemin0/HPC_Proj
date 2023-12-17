@@ -33,5 +33,5 @@ module load cuda/11.2.0 gcc/10.2 fftw/3.3.6
 make all
 
 # Run and Profile
-nsys profile --stats=true --force-overwrite=true -o report1 ./It_CT.out
-#./It_CT.out
+#nsys profile --stats=true --force-overwrite=true -o report1 ./It_CT.out
+./It_CT.out
