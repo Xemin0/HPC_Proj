@@ -369,11 +369,11 @@ __global__ void fft1d_batch_kernel(cuDoubleComplex *d_x, int N, int batch_size,
             double angle = -2 * PI / len;
             cuDoubleComplex wlen = make_cuDoubleComplex(cos(angle), sin(angle));
 
-            if (idx < N/2){ // boundary check for each thread 
+            if (localEntryIdx < N/2){ // boundary check for each thread 
                 // Local Segment Index
                 int segment_idx = localEntryIdx / (len/2); // len/2 threads for each segment
                 int local_tid = localEntryIdx % (len/2);  // Local to current segment
-                int segmentstart = segment_idx * len;
+                int segment_start = segment_idx * len;
 
                 cuDoubleComplex w = pow_cuDoubleComplex(wlen, local_tid);
 
@@ -421,7 +421,7 @@ void fft1d_batch_device(cuDoubleComplex *d_x, int N, int batch_size,
 
     int sharedMemSize = sizeof(cuDoubleComplex) * N; // Total shared memory size per block
 
-    fft1d_kernel <<< nblocks, nthreads, sharedMemSize, 0 >>> (d_x, N, batch_size, n_blocks);
+    fft1d_batch_kernel <<< nblocks, nthreads, sharedMemSize, 0 >>> (d_x, N, batch_size, n_blocks);
 }
 
 
