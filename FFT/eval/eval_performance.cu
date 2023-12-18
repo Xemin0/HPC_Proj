@@ -21,7 +21,7 @@
 #include "../lib/timer.h" // get_time() return time in microsecond (us)
                           // HighPrecisionTimer that measure both CPU and GPU time
 #include "../lib/loader.h"
-#include "../lib/fft1d_cu.h" // fft1d_batch_cu()
+#include "../lib/fft1d_cuda.h" // fft1d_batch_cu()
 
 using namespace std;
 
