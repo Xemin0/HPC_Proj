@@ -10,6 +10,11 @@
 ### APIs Proportion of Current Implementation
 ![CUDA APIs Proportion](./results/pix/APIcallsProportion.png?raw=true "NSIGHT Profile") 
 
+
+### Datasets
+- [1D Test Dataset(EEG Data)](https://drive.google.com/drive/folders/1HtinENxel10tj7W3ckKxAQix1gxDz1br?usp=sharing)
+- [2D Test Dataset(CIFAR10)](https://drive.google.com/drive/folders/1qvbv90PAO79KGgIBNRjyjQkqEzqHD7wI?usp=sharing)
+
 ## Decision Making in Parallelizing an Algorithm
 ```mermaid
 flowchart TD
@@ -53,7 +58,7 @@ flowchart TD
 ## Compile with `FFTW` library
 *Change the `FFTW` library path as needed*
 
-### Compilation with Makefile (recommended)
+### Compile Using the `makefile` (recommended)
 In the `./FFT/` folder use the bash command `make`
 
 **May need to change `NVCCFLAG` for GPUs with different Compute Capabilities (CC), but no CC-specific CUDA API calls in current implementation**
