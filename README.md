@@ -85,24 +85,23 @@ A couple implementation details to consider
 - Implement `eval_correctness` and `eval_performance` methods for CUDA
 - Optimization for long vector FFT
 - 1D FFT for batch input
-    - Sequentially launch the kernels
-    - Using thread blocks to process the input in batches(Tiling)
+    - ~Sequentially launch the kernels~
+    - ~Using thread blocks to process the input in batches(Tiling)~
+        - Test and plot the relationship between performance and number of thread blocks assigned; Compare with theoretical value
+        - Add boundary checks when tiling in 1D Batch FFT
+        - Correctness
     - Streams with asynchronous operations
-- Handle Batched input
-    - Adjust the kernel to be able to handle batched 1D input
-    - Create streams (large overhead) 
 
 ### 2D FFT
 - ?? Design Kernels for 2D FFT (Nested Calls?)
 - ?? Directly Optimize 2D FFT after `bitReverse` step
 - Launch 1D FFT for batch input twice
-- Kernel Launching method
+- Kernel Launching method or a wrapper function
 - Correctness and Performance
 
 ### Misc
 - ~`cudaCheck()`~
 - ~Separate CUDA Utilities~
-- Add boundary check when tiling in 1D Batch FFT
 - Add data processing and memory allocation utils for CUDA
 - Implement testing subroutines for CUDA method (`cudaMalloc` and `cudaFree` waste alot of time between kernel calls)
 
