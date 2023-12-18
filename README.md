@@ -1,5 +1,15 @@
 # Parallelizing 2D Fast-Fourier Transform Implemented with Cooley-Tukey Algorithm Using CUDA
 
+### Results on Current Implementation of 1D FFT for the Given 1D Dataset (Updated; *Could Be Improved*)
+|1D FFT method| Performance (ms)|
+|:---:|:---:|
+|FFTW| 382.74 |
+|Iterative Method(CPU)| 638.01 |
+|Method with Batch Input(GPU-500ThreadBlocks)| 30.15|
+
+### APIs Proportion of Current Implementation
+![CUDA APIs Proportion](./results/pix/APIcallsProportion.png?raw=true "NSIGHT Profile") 
+
 ## Decision Making in Parallelizing an Algorithm
 ```mermaid
 flowchart TD
@@ -80,9 +90,9 @@ A couple implementation details to consider
 
 
 
-## TO-DOS
+## TO-DOS and Progress
 ### 1D FFT
-- Implement `eval_correctness` and `eval_performance` methods for CUDA
+- ~Correctness of 1D FFT CUDA method~
 - Optimization for long vector FFT
 - 1D FFT for batch input
     - ~Sequentially launch the kernels~
@@ -91,19 +101,20 @@ A couple implementation details to consider
         - Add boundary checks when tiling in 1D Batch FFT
         - Correctness
     - Streams with asynchronous operations
+        - Test and plot the relationship between performance and number of streams
+        - Correctness
+    - ~Implement `eval_performance` for batched methods~
 
 ### 2D FFT
 - ?? Design Kernels for 2D FFT (Nested Calls?)
 - ?? Directly Optimize 2D FFT after `bitReverse` step
 - Launch 1D FFT for batch input twice
-- Kernel Launching method or a wrapper function
 - Correctness and Performance
 
 ### Misc
 - ~`cudaCheck()`~
 - ~Separate CUDA Utilities~
-- Add data processing and memory allocation utils for CUDA
-- Implement testing subroutines for CUDA method (`cudaMalloc` and `cudaFree` waste alot of time between kernel calls)
+- ~Add data processing and memory allocation utils for CUDA~
 
 ### Primary Files to Work On
 - `CooleyTukeyFFT/*.cu`
