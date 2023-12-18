@@ -179,7 +179,7 @@ int main()
 	// (CPU time) Eval the Average Time Performing 1D FFT with CUDA and output to a file
 	eval_FFT1d_4BatchData(finger1,	// Dataset
                      fft1d_batch_cu2,// FFT batch method to test
-                     80,      // Number of Blocks ************ Can be Changed for optimal results *********** 
+                     250,      // Number of Blocks ************ Can be Changed for optimal results *********** 
                      true,    // CPU time
 	 				 2,			// warm up runs (excluded in eval)
 	 				 5,			// testruns to take the average of
