@@ -100,6 +100,9 @@ int main()
 	 * 		- fftw_1d_wrapper	: 1D FFT method from FFTW
 	 *		- fft1d_cu          : 1D FFT method w. CUDA
      *
+     *      - fft1d_batch_cu    : 1D FFT for batch input - Sequentially launched kernels
+     *      - fft1d_batch_cu2   : 1D FFT for batch input - Kernel with batch input
+     *
      *
 	 * Available 2D FFT methods available for testing:
      * 
@@ -175,6 +178,7 @@ int main()
 
 	// (CPU time) Eval the Average Time Performing 1D FFT with CUDA and output to a file
 	eval_FFT1d_4BatchData(finger1,	// Dataset
+                     fft1d_batch_cu2,// FFT batch method to test
                      true,    // CPU time
 	 				 2,			// warm up runs (excluded in eval)
 	 				 5,			// testruns to take the average of
@@ -182,12 +186,12 @@ int main()
 	 				 "our1d_cu_cpu"); // base filename
 
 	// (GPU time) Eval the Average Time Performing 1D FFT with CUDA and output to a file
-	eval_FFT1d_4BatchData(finger1,	// Dataset
-                     false,    // CPU time
-	 				 2,			// warm up runs (excluded in eval)
-	 				 5,			// testruns to take the average of
-	 				 true,		// if write to file
-	 				 "our1d_cu_gpu"); // base filename
+	//eval_FFT1d_4BatchData(finger1,	// Dataset
+    //                 false,    // CPU time
+	// 				 2,			// warm up runs (excluded in eval)
+	// 				 5,			// testruns to take the average of
+	// 				 true,		// if write to file
+	// 				 "our1d_cu_gpu"); // base filename
 
 	// Eval the Average Time Performing 1D FFT with FFTW and output to a file
 	eval_FFT1d_4Data(finger1,	// Dataset

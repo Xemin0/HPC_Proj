@@ -22,6 +22,7 @@
                           // HighPrecisionTimer that measure both CPU and GPU time
 #include "../lib/loader.h"
 #include "../lib/fft1d_cuda.h" // fft1d_batch_cu()
+                               // fft1d_batch_cu2()
 
 using namespace std;
 
@@ -29,7 +30,9 @@ typedef complex<double> Complex;
 
 // Define the function pointer
 typedef void (*FuncPtr)(Complex*, int);     // for 1D FFT methods
+typedef void (*FuncPtrBatch)(Complex*, int, int, int) // for 1D Batch FFT methods
 typedef void (*FuncPtr2)(Complex**, int, int);   // for 2D FFT methods
+
 
 
 // ********** 1D FFT Performance Evaluation *********** //
@@ -131,7 +134,7 @@ float eval_FFT1d_4Data(Dataset1D& ds, FuncPtr func,
 
 
 // ********** 1D FFT for Batch Input Performannce Evaluation *********** //
-float time_FFT1d_4BatchData(Dataset1D& ds, bool isCPU) // ## May need to return HighPrecisionTimer object
+float time_FFT1d_4BatchData(Dataset1D& ds, FuncPtrBatch func, bool isCPU) // ## May need to return HighPrecisionTimer object
 {
     /*
      * Time a single run of provided 1D FFT method over the whole dataset as a batch
@@ -153,7 +156,9 @@ float time_FFT1d_4BatchData(Dataset1D& ds, bool isCPU) // ## May need to return 
     HighPrecisionTimer timer;
 
     // Allocate for a long vector that stores the truncated vectors
-    Complex *all_vecs = (Complex*)malloc(rows*depth * truncated_cols * sizeof(Complex));
+    //Complex *all_vecs = (Complex*)malloc(rows*depth * truncated_cols * sizeof(Complex));
+    Complex *all_vecs;
+    cudaHostAlloc((void **)&all_vecs, rows*depth * truncated_cols * sizeof(Complex), cudaHostAllocDefault);
     
     // Copy data into this vector
     for (int i = 0; i < rows; i++) 
@@ -165,18 +170,26 @@ float time_FFT1d_4BatchData(Dataset1D& ds, bool isCPU) // ## May need to return 
     // 1D FFT with provided method (as a function pointer)
     //start = get_time();
     timer.Start();
-    fft1d_batch_cu(all_vecs, truncated_cols, rows*depth);
+    func(all_vecs, truncated_cols, rows*depth);
     //end = get_time();
     timer.Stop();
 
     // Aggregate the timed result
     //tot_time += end - start;
     tot_time = timer.Elapsed(isCPU);
+
+    // !! Write the results back to Dataset if needed !! //
+    
+    // Clean up
+    //free(all_vecs);
+    cudaFreeHost(all_vecs);
+
     return tot_time; 
 }
 
 
 float eval_FFT1d_4BatchData(Dataset1D& ds,
+                      FuncPtrBatch func,
                       bool isCPU,
                       int warmup, int testruns,
                       bool toFile, std::string filename)
@@ -204,12 +217,12 @@ float eval_FFT1d_4BatchData(Dataset1D& ds,
 
     // Warm up runs
     for (int i = 0; i < warmup; i++)
-        time_FFT1d_4BatchData(ds, isCPU);
+        time_FFT1d_4BatchData(ds, func, isCPU);
 
 
     // Recording times and take the average
     for (int i = 0; i < testruns; i++)
-        avg_t += time_FFT1d_4BatchData(ds, isCPU);
+        avg_t += time_FFT1d_4BatchData(ds, func, isCPU);
 
     avg_t /= testruns;
 

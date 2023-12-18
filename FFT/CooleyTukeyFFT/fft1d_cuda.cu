@@ -187,7 +187,7 @@ __global__ void fft1d_kernel(cuDoubleComplex *d_x, int N){
 void fft1d_device(cuDoubleComplex *d_x, int N)
 {
     /*
-     * Kernel Launching Method of fft_1d_kernel
+     * Kernel Launching Method of fft1d_kernel
      * both the input and the output stay on DEVICE
      * 
      * As the Butterfly Step requires N/2 threads
@@ -243,6 +243,13 @@ void fft1d_cu(Complex *h_x, int N)
 }
 
 // ###########################################
+// #### Kernels for Kernel Launching Methods Batch Input
+// ####
+// #### - fft1d_batch_cu    : Sequentially call the kernels for each vector in batch 
+// #### - fft1d_batch_cu2   : With kernels that handles the batch with thread blocks (Tiling)
+// #### - fft1d_batch_cu3   : With Streams
+// ###########################################
+
 
 void fft1d_batch_cu(Complex *h_x, int N, int batch_size)
 {
@@ -282,3 +289,174 @@ void fft1d_batch_cu(Complex *h_x, int N, int batch_size)
     cudaFree(d_x);
 }
 
+// ###########################################
+
+__global__ void fft1d_batch_kernel(cuDoubleComplex *d_x, int N, int batch_size, 
+                                   int n_blocks){
+    /*
+     * 1 D FFT Kernel for Batch Input (Adapted from fft1d_kernel)
+     * 
+     * stages : iterations for different len 
+     * segment: at each stage, the vector is segmented into parts of size len
+     *          each segment is handled by len/2 threads
+     *          each thread is handling each butterfly pair 
+     * 
+     * Input:
+     *      - N             : Each vector size
+     *      - batch_size    : Total number of vectors in d_x
+     *      - n_blocks      : Number of blocks, usually n_blocks = gridDim.x
+     *                        i.e. One thread block per vector
+     *                        and blockDim.x = N / 2 for butterfly step
+     */
+
+    unsigned int startVecIdx = blockIdx.x;
+    unsigned int blockStride = n_blocks; // over vector Index
+
+    // Tiling of blocks
+    // To ensure the assigned number of blocks cover the whole input
+    for (int currVecIdx = startVecIdx; currVecIdx < batch_size; currVecIdx += blockStride)
+    {
+        // ###
+        // Bit Reverse Part
+        // ###
+        unsigned int startIdx = currVecIdx * N  + threadIdx.x + 1; // skipping the first element
+        unsigned int stride = blockDim.x; // One block per vector
+                                          // blockDim.x = N/2 for one block
+
+        // Tiling of threads
+        // less likely, but just in case the total number of threads = stride < N
+        #pragma unroll
+        for (int i = startIdx; i < N - 1; i += stride){
+            int j = 0;
+            for (int k = 0; k < __log2f(N); ++k) // for each bit
+                if (i & (1 << k))
+                    j |= (N >> (k+1));
+
+            if (i < j){ // Swap element at i and j
+                cuDoubleComplex tmp = d_x[i];
+                d_x[i] = d_x[j];
+                d_x[j] = tmp;
+            }
+        }
+
+        __syncthreads();
+
+        // ###
+        // Butterfly Step (Reworked from the Original Iterative Method)
+        // ###
+
+        // Local Entry Index within the current vector / block
+        int localEntryIdx = threadIdx.x; // ### blockDim.x = N/2 with one Block
+        // Corresponding Global Entry Index 
+        int globalEntryIdx = currVecIdx * N + localEntryIdx;
+
+        extern __shared__ cuDoubleComplex sharedMem[]; // !! Must be of size N/2 !! //
+        cuDoubleComplex *x_shared0 = sharedMem;             // shared memory for d_x First Half
+        cuDoubleComplex *x_shared1 = sharedMem + blockDim.x;// shared memory for d_x Second Half
+                  // equivelent to = sharedMem + N/2;
+
+        // Load d_x to be reused for each stage
+        if (localEntryIdx < N / 2){
+            x_shared0[localEntryIdx] = d_x[globalEntryIdx]; 
+            x_shared1[localEntryIdx] = d_x[globalEntryIdx + N/2];
+        }
+
+        __syncthreads();
+
+        // Each Stage - Processed by each block with shared mem x_shared0, x_shared1, 
+        // so all indices can be just local 
+        for (int len = 2; len <= N; len <<= 1){
+            double angle = -2 * PI / len;
+            cuDoubleComplex wlen = make_cuDoubleComplex(cos(angle), sin(angle));
+
+            if (idx < N/2){ // boundary check for each thread 
+                // Local Segment Index
+                int segment_idx = localEntryIdx / (len/2); // len/2 threads for each segment
+                int local_tid = localEntryIdx % (len/2);  // Local to current segment
+                int segmentstart = segment_idx * len;
+
+                cuDoubleComplex w = pow_cuDoubleComplex(wlen, local_tid);
+
+                int u_idx = segment_start + local_tid;
+                int v_idx = u_idx + len/2;
+
+                cuDoubleComplex u = (u_idx < N/2) ? x_shared0[u_idx] : x_shared1[u_idx - N/2];
+                cuDoubleComplex v = (v_idx < N/2) ? cuCmul(x_shared0[v_idx], w) : cuCmul(x_shared1[v_idx - N/2], w);
+
+                if (u_idx < N/2)
+                    x_shared0[u_idx] = cuCadd(u, v);
+                else
+                    x_shared1[u_idx - N/2] = cuCadd(u, v);
+
+                if (v_idx < N/2)
+                    x_shared0[v_idx] = cuCsub(u, v);
+                else
+                    x_shared1[v_idx - N/2] = cuCsub(u, v);
+            }
+            __syncthreads();
+        }
+
+        // Write back to Global Memory
+        if (localEntryIdx < N / 2){
+            d_x[globalEntryIdx] = x_shared0[localEntryIdx];
+            d_x[globalEntryIdx + N/2] = x_shared1[localEntryIdx];
+        }
+    }
+}
+
+
+void fft1d_batch_device(cuDoubleComplex *d_x, int N, int batch_size,
+                        int n_blocks)
+{
+    /*
+     * Kernel Launching Method of fft1d_batch_kernel
+     * both the input and the output stay on DEVICE
+     * 
+     * As the Butterfly Step requires N/2 threads
+     * we will fix BlockDim = N/2
+     * GridDim = n_blocks
+     */
+    dim3 nthreads(N/2, 1, 1);   // BlockDim
+    dim3 nblocks(n_blocks, 1, 1);      // GridDim
+
+    int sharedMemSize = sizeof(cuDoubleComplex) * N; // Total shared memory size per block
+
+    fft1d_kernel <<< nblocks, nthreads, sharedMemSize, 0 >>> (d_x, N, batch_size, n_blocks);
+}
+
+
+
+void fft1d_batch_cu2(Complex *h_x, int N, int batch_size,
+                    int n_blocks)
+{
+    /*
+     * Wrapper Function of 1D FFT with CUDA for Batch Input with Multiple Blocks
+     * ### For further improvements, off load this kernel 
+     * 
+     * Input:
+     *  - h_x       : HOST vector contigously allocated of total size N*batch_size
+     *                consisting of batch_size vectors of size N to apply 1D FFT on
+     *  - n_blocks  : Number of Blocks
+     */
+    // Allocate Device Memory
+    cuDoubleComplex* d_x;
+    cudaMalloc((void**)&d_x, batch_size * N * sizeof(cuDoubleComplex));
+    last_cuda_error("Malloc for batch d_x");
+
+    // Copy the batch of vectors from HOST to DEVICE
+    cudaMemcpy(d_x, h_x, batch_size * N * sizeof(cuDoubleComplex), cudaMemcpyHostToDevice);
+    last_cuda_error("H2D for batch");
+
+    // Launch the kernel for each vector
+    fft1d_batch_device(d_x, N, batch_size, n_blocks);
+    last_cuda_error("Launching kernel for batch");
+
+    //Copy the results back to host memory 
+    cudaMemcpy(h_x, d_x, batch_size * N * sizeof(Complex), cudaMemcpyDeviceToHost);
+    last_cuda_error("D2H for batch");
+
+    // Clean up
+    cudaFree(d_x);
+}
+
+// ###########################################

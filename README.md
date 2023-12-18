@@ -74,7 +74,7 @@ A couple implementation details to consider
 - Or utilize 1D Batch FFT
 
 ### Performance Evaluation Workflow for CUDA Methods
-- As `cudaMalloc` and `cudaFree` take up **RIDICULOUS** amount of time compared to kernels, for larger datasets, consider reusing device memories that have been allocated or group up CUDA API calls of the same type (Memory Allocation v.s. Kernel Launching v.s. Reclaiming Memories)
+- As `cudaMalloc` and `cudaFree` take up **RIDICULOUS** amount of time compared to kernels, for larger datasets, consider processing data as a batch.
     - Larger in Vector/Matrix Sizes
     - Larger in the Number of Samples
 
@@ -85,10 +85,17 @@ A couple implementation details to consider
 - Implement `eval_correctness` and `eval_performance` methods for CUDA
 - Optimization for long vector FFT
 - 1D FFT for batch input
+    - Sequentially launch the kernels
+    - Using thread blocks to process the input in batches(Tiling)
+    - Streams with asynchronous operations
+- Handle Batched input
+    - Adjust the kernel to be able to handle batched 1D input
+    - Create streams (large overhead) 
 
 ### 2D FFT
 - ?? Design Kernels for 2D FFT (Nested Calls?)
 - ?? Directly Optimize 2D FFT after `bitReverse` step
+- Launch 1D FFT for batch input twice
 - Kernel Launching method
 - Correctness and Performance
 
