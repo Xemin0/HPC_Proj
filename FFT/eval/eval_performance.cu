@@ -229,7 +229,7 @@ float eval_FFT1d_4BatchData(Dataset1D& ds,
 
     // write to the file if specified
     if (toFile)          
-        timeFile << "Average time of 1D FFT over the whole 1D-Dataset of " << testruns << " runs: " << avg_t << " us" << endl;
+        timeFile << "Average time of 1D FFT over the whole 1D-Dataset of " << testruns << " runs with " << n_blocks << " Thread Blocks: " << avg_t << " us" << endl;
 
     timeFile.close();
     return avg_t;
