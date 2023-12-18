@@ -30,7 +30,7 @@ typedef complex<double> Complex;
 
 // Define the function pointer
 typedef void (*FuncPtr)(Complex*, int);     // for 1D FFT methods
-typedef void (*FuncPtrBatch)(Complex*, int, int, int) // for 1D Batch FFT methods
+typedef void (*FuncPtrBatch)(Complex*, int, int, int); // for 1D Batch FFT methods
 typedef void (*FuncPtr2)(Complex**, int, int);   // for 2D FFT methods
 
 

@@ -15,7 +15,7 @@
 #include "../lib/loader.h"
 
 typedef void (*FuncPtr)(Complex*, int);     // for 1D FFT methods
-typedef void (*FuncPtrBatch)(Complex*, int, int, int) // for 1D Batch FFT methods
+typedef void (*FuncPtrBatch)(Complex*, int, int, int); // for 1D Batch FFT methods
 typedef void (*FuncPtr2)(Complex**, int, int);   // for 2D FFT methods
 
 float time_FFT1d_4Data(Dataset1D& ds, FuncPtr func = fft_it_1d, bool isCPU = true);
