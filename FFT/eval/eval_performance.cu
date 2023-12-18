@@ -21,6 +21,8 @@
 #include "../lib/timer.h" // get_time() return time in microsecond (us)
                           // HighPrecisionTimer that measure both CPU and GPU time
 #include "../lib/loader.h"
+#include "../lib/fft1d_cu.h" // fft1d_batch_cu()
+
 using namespace std;
 
 typedef complex<double> Complex;
@@ -78,6 +80,7 @@ float time_FFT1d_4Data(Dataset1D& ds, FuncPtr func, bool isCPU) // ## May need t
     return tot_time; 
 }
 
+
 float eval_FFT1d_4Data(Dataset1D& ds, FuncPtr func,
                       bool isCPU,
 					  int warmup, int testruns,
@@ -124,6 +127,98 @@ float eval_FFT1d_4Data(Dataset1D& ds, FuncPtr func,
 
     timeFile.close();
 	return avg_t;
+}
+
+
+// ********** 1D FFT for Batch Input Performannce Evaluation *********** //
+float time_FFT1d_4BatchData(Dataset1D& ds, bool isCPU) // ## May need to return HighPrecisionTimer object
+{
+    /*
+     * Time a single run of provided 1D FFT method over the whole dataset as a batch
+     * Specifically for CUDA method
+     */
+    int rows, cols, depth;   
+    ds.getDimensions(rows, cols, depth);
+
+    // Iterative FFT requires input size to be a power of 2
+    int truncated_cols = log2(cols);
+    truncated_cols = static_cast<int>(pow(2, truncated_cols));
+    //cout << "resized column size: \t" << truncated_cols << endl;
+
+
+    float tot_time = 0.0;
+    //unsigned long start, end;
+
+    // high precision timer 
+    HighPrecisionTimer timer;
+
+    // Allocate for a long vector that stores the truncated vectors
+    Complex *all_vecs = (Complex*)malloc(rows*depth * truncated_cols * sizeof(Complex));
+    
+    // Copy data into this vector
+    for (int i = 0; i < rows; i++) 
+        for (int k = 0; k < depth; k++){ 
+            // load channel/row data to tmp
+            for (int j = 0; j < truncated_cols; j++)
+                all_vecs[i*k + j] = ds.getElement(i+1, j+1, k+1); // Copy by value ?? not by reference??
+
+    // 1D FFT with provided method (as a function pointer)
+    //start = get_time();
+    timer.Start();
+    func(all_vecs, truncated_cols, rows*depth);
+    //end = get_time();
+    timer.Stop();
+
+    // Aggregate the timed result
+    //tot_time += end - start;
+    tot_time = timer.Elapsed(isCPU);
+    return tot_time; 
+}
+
+
+float eval_FFT1d_4BatchData(Dataset1D& ds,
+                      bool isCPU,
+                      int warmup, int testruns,
+                      bool toFile, std::string filename)
+{
+    /*  
+     * Average Performance of 1D FFT for a given Dataset with CUDA in microsecond (us)
+     * (MAYBE) FLOPrate ** to be completed ** 
+     *
+     * Warmup runs are excluded in evaluation
+     */
+
+    std::string root_path = "./Data/Results/";
+
+    // File name preparation
+    string time_filename = root_path + filename + "_us.dat";
+
+        
+    ofstream timeFile(time_filename); 
+    if (!timeFile.is_open()){
+        cerr << "Failed to open file for writing!" << endl;
+    }   
+    cout << "Writing average time of 1D FFT to: " << time_filename << endl;
+
+    float avg_t = 0;
+
+    // Warm up runs
+    for (int i = 0; i < warmup; i++)
+        time_FFT1d_4BatchData(ds, isCPU);
+
+
+    // Recording times and take the average
+    for (int i = 0; i < testruns; i++)
+        avg_t += time_FFT1d_4BatchData(ds, isCPU);
+
+    avg_t /= testruns;
+
+    // write to the file if specified
+    if (toFile)          
+        timeFile << "Average time of 1D FFT over the whole 1D-Dataset of " << testruns << " runs: " << avg_t << " us" << endl;
+
+    timeFile.close();
+    return avg_t;
 }
 
 

@@ -208,6 +208,8 @@ void fft1d_cu(Complex *h_x, int N)
      * Wrapper Function of 1D FFT with CUDA
      *
      * Assumes Data Allocated on HOST 
+     * Input: h_x HOST vector of size N
+     *
      * 1. Transfer Data to DEVICE
      * 2. Launch the Kernel
      * 3. Copy Back the Results
@@ -242,5 +244,39 @@ void fft1d_cu(Complex *h_x, int N)
 
 // ###########################################
 
+void fft1d_batch_cu(Complex *h_x, int N, int batch_size)
+{
+    /*
+     * Wrapper Function of 1D FFT with CUDA for Batch Input
+     * ### Alternatively, may need to adjust the 1d kernel for batch input ###
+     * 
+     * Input: 
+     *   - h_x: HOST vector contiguosly allocated of total size N*batch_size
+     *          consisting of batch_size vectors of size N to apply 1D FFT on
+     * 1. Transfer Data to Device
+     * 2. Launch the 1d kernel to each vector
+     * 3. Copy back the Results
+     */
+    // Allocate Device Memory
+    Complex* d_x;
+    cudaMalloc((void**)&h_x, batch_size * N * sizeof(Complex));
 
+    // Copy the batch of vectors from HOST to DEVICE
+    cudaMemcpy(d_x, h_x, batch_size * N * sizeof(Complex), cudaMemcpyHostToDevice);
+
+    // Launch the kernel for each vector
+    for (int i = 0; i < batch_size; ++i)
+    {
+        // Launch 1D Kernel for current vector
+        fft1d_device(d_x + i * N, N);
+
+        cudaDeviceSynchronize(); // Wait for completion
+    }
+
+    //Copy the results back to host memory 
+    cudaMemcpy(h_x, d_x, batch_size * N * sizeof(Complex), cudaMemcpyDeviceToHost);
+
+    // Clean up
+    cudaFree(d_x);
+}
 

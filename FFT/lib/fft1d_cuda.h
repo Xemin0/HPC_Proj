@@ -26,3 +26,5 @@ __global__ void fft1d_kernel(cuDoubleComplex *d_x, int N);
 void fft1d_device(cuDoubleComplex *d_x, int N);
 
 void fft1d_cu(Complex *h_x, int N);
+
+void fft1d_batch_cu(Complex *h_x, int N, int batch_size);

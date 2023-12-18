@@ -30,6 +30,13 @@ float eval_FFT1d_4Data(Dataset1D& ds, FuncPtr func = fft_it_1d,
 //  "warmup" warm-up runs (excluded in eval)
 // and then take the average of "testruns" runs
 
+// ********** 1D FFT For Batch Input Performance Evaluation *********** //
+float time_FFT1d_4BatchData(Dataset1D& ds, bool isCPU);
+
+float eval_FFT1d_4BatchData(Dataset1D& ds,
+                      bool isCPU = true,
+                      int warmup = 2, int testruns = 5,
+                      bool toFile = true, std::string filename = "our1d_cu");
 
 // ********** 2D FFT Performance Evaluation *********** //
 
