@@ -259,11 +259,11 @@ void fft1d_batch_cu(Complex *h_x, int N, int batch_size)
      */
     // Allocate Device Memory
     cuDoubleComplex* d_x;
-    cudaMalloc((void**)&h_x, batch_size * N * sizeof(cuDoubleComplex));
+    cudaMalloc((void**)&d_x, batch_size * N * sizeof(cuDoubleComplex));
     last_cuda_error("Malloc for batch d_x");
 
     // Copy the batch of vectors from HOST to DEVICE
-    cudaMemcpy(d_x, h_x, batch_size * N * sizeof(Complex), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_x, h_x, batch_size * N * sizeof(cuDoubleComplex), cudaMemcpyHostToDevice);
     last_cuda_error("H2D for batch");
 
     // Launch the kernel for each vector
