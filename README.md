@@ -102,6 +102,7 @@ A couple implementation details to consider
 ### Misc
 - ~`cudaCheck()`~
 - ~Separate CUDA Utilities~
+- Add boundary check when tiling in 1D Batch FFT
 - Add data processing and memory allocation utils for CUDA
 - Implement testing subroutines for CUDA method (`cudaMalloc` and `cudaFree` waste alot of time between kernel calls)
 

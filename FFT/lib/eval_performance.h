@@ -33,10 +33,13 @@ float eval_FFT1d_4Data(Dataset1D& ds, FuncPtr func = fft_it_1d,
 
 // ********** 1D FFT For Batch Input Performance Evaluation *********** //
 
-float time_FFT1d_4BatchData(Dataset1D& ds, FuncPtrBatch func = fft1d_batch_cu2, bool isCPU = true);
+float time_FFT1d_4BatchData(Dataset1D& ds, FuncPtrBatch func = fft1d_batch_cu2,
+                            int n_blocks = 4,
+                            bool isCPU = true);
 
 float eval_FFT1d_4BatchData(Dataset1D& ds,
                       FuncPtrBatch func = fft1d_batch_cu2,
+                      int n_blocks = 4,
                       bool isCPU = true,
                       int warmup = 2, int testruns = 5,
                       bool toFile = true, std::string filename = "our1d_cu");
