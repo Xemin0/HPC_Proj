@@ -60,10 +60,16 @@ In the `./FFT/` folder use the bash command `make`
 
 *If a fresh build is desired, simply run `make clean` before running `make` or `make all`*
 
-## Run 
-`./It_CT.out`
+## Run Locally 
+In the `./FFT/` folder run `./It_CT.out`
 
 or `nsys profile ./It_CT.out` to profile with NVIDIA NSIGHT and run
+
+## Compile and Run with SLURM Script on a Cluster
+In the `./FFT/` folder use the SLURM `test_cuda.sh` on Oscar by 
+```bash
+sbatch test_cuda.sh
+```
 
 ## Major Challenges
 ### 1D FFT
