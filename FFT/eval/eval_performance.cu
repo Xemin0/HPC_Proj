@@ -157,7 +157,7 @@ float time_FFT1d_4BatchData(Dataset1D& ds, bool isCPU) // ## May need to return 
     
     // Copy data into this vector
     for (int i = 0; i < rows; i++) 
-        for (int k = 0; k < depth; k++){ 
+        for (int k = 0; k < depth; k++)
             // load channel/row data to tmp
             for (int j = 0; j < truncated_cols; j++)
                 all_vecs[i*k + j] = ds.getElement(i+1, j+1, k+1); // Copy by value ?? not by reference??
@@ -165,7 +165,7 @@ float time_FFT1d_4BatchData(Dataset1D& ds, bool isCPU) // ## May need to return 
     // 1D FFT with provided method (as a function pointer)
     //start = get_time();
     timer.Start();
-    func(all_vecs, truncated_cols, rows*depth);
+    fft1d_batch_cu(all_vecs, truncated_cols, rows*depth);
     //end = get_time();
     timer.Stop();
 
