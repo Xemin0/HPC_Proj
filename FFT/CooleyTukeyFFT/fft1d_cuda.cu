@@ -272,8 +272,6 @@ void fft1d_batch_cu(Complex *h_x, int N, int batch_size)
         // Launch 1D Kernel for current vector
         fft1d_device(d_x + i * N, N);
         last_cuda_error("Launching kernel for batch");
-
-        cudaDeviceSynchronize(); // Wait for completion
     }
 
     //Copy the results back to host memory 
