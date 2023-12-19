@@ -7,6 +7,8 @@
 - `fft_it_1d`: the Iterative method
 - `fft2_1d_wrapper`: the Wrapper function for 1D FFT method from FFTW library
 
+**Check Respective Branch for More**
+
 *Recommended format*
 
 `void FFT_method(Complex *vec, int N)`

@@ -4,6 +4,8 @@
 - MPI
 - CUDA
 
+#### ALternatively, check respective branch for details and validated ones
+
 
 ### Tips for `makefile`
 - `tab` cannot be replaced by 4 `spaces`
