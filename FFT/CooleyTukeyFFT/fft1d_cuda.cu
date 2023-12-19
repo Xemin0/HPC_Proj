@@ -475,7 +475,7 @@ void fft1d_batch_cu2(Complex *h_x, int N, int batch_size,
         for (int i = 0; i < n_streams; i++)
         {
             // Calculate the data size (handle the remainders)
-            dataSize = ( (i + 1 == n_streams) && (batch_size % n_streams)? ) (batch_size % n_streams)*N * sizeof(cuDoubleComplex): vecsPerStream*N * sizeof(cuDoubleComplex); 
+            dataSize = ( (i + 1 == n_streams) && (batch_size % n_streams) )? (batch_size % n_streams)*N * sizeof(cuDoubleComplex): vecsPerStream*N * sizeof(cuDoubleComplex); 
             cudaMalloc(&d_x_sub[i], dataSize);
         }
         last_cuda_error("sub vectors");
