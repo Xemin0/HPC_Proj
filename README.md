@@ -3,7 +3,7 @@
 ### Results on Current Implementation of 1D FFT for the Given 1D Dataset (Updated; *Need Further Optimizations*)
 |1D FFT method| Performance (ms)|
 |:---:|:---:|
-|FFTW| 396.52 |
+|FFTW(CPU)| 396.52 |
 |Iterative Method(CPU)| 619.40 |
 |Method with Batch Input<br />(GPU - 500 Thread Blocks)| 25.29|
 |Method with Streams<br />(GPU - 5 Streams & 100 Thread Blocks per Stream)|19.44|
