@@ -35,7 +35,7 @@ void fft1d_cu(Complex *h_x, int N);
 // #### - fft1d_batch_cu3   : With Streams
 // ###########################################
 
-void fft1d_batch_cu(Complex *h_x, int N, int batch_size, int n_streams);
+void fft1d_batch_cu(Complex *h_x, int N, int batch_size, int n_blocks, int n_streams);
 
 // ###########################################
 __global__ void fft1d_batch_kernel(cuDoubleComplex *d_x, int N, int batch_size, 
@@ -45,6 +45,6 @@ void fft1d_batch_device(cuDoubleComplex *d_x, int N, int batch_size,
                         int n_blocks = 1);
 
 void fft1d_batch_cu2(Complex *h_x, int N, int batch_size,
-                     int n_blocks = 0);
+                     int n_blocks = 1, int n_streams = 0);
 
 // ###########################################

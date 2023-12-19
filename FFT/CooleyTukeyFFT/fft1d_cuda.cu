@@ -251,7 +251,7 @@ void fft1d_cu(Complex *h_x, int N)
 // ###########################################
 
 
-void fft1d_batch_cu(Complex *h_x, int N, int batch_size, int n_streams)
+void fft1d_batch_cu(Complex *h_x, int N, int batch_size, int n_blocks, int n_streams)
 {
     /*
      * Wrapper Function of 1D FFT with CUDA for Batch Input
