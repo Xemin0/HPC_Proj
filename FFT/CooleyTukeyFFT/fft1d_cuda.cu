@@ -45,6 +45,7 @@ __global__ void bitReverse_kernel(cuDoubleComplex *d_x, int N){
 
     // Tiling
     // Less likely, but just in case the total number of threads = stride < N
+    #pragma unroll
     for (int i = startIdx; i < N - 1; i += stride){
         int j = 0;
         for (int k = 0; k < __log2f(N); ++k) // for each bit
@@ -274,6 +275,7 @@ void fft1d_batch_cu(Complex *h_x, int N, int batch_size, int n_blocks, int n_str
     last_cuda_error("H2D for batch");
 
     // Launch the kernel for each vector
+    #pragma unroll
     for (int i = 0; i < batch_size; ++i)
     {
         // Launch 1D Kernel for current vector
@@ -314,6 +316,7 @@ __global__ void fft1d_batch_kernel(cuDoubleComplex *d_x, int N, int batch_size,
 
     // Tiling of blocks
     // To ensure the assigned number of blocks cover the whole input
+    #pragma unroll
     for (int currVecIdx = startVecIdx; currVecIdx < batch_size; currVecIdx += blockStride)
     {
         // ###
@@ -472,6 +475,8 @@ void fft1d_batch_cu2(Complex *h_x, int N, int batch_size,
         // Temp Memory for subsets of input batch
         cuDoubleComplex *d_x_sub[n_streams];
         size_t dataSize;
+        
+        #pragma unroll
         for (int i = 0; i < n_streams; i++)
         {
             // Calculate the data size (handle the remainders)
@@ -488,6 +493,7 @@ void fft1d_batch_cu2(Complex *h_x, int N, int batch_size,
 
         // Asynchronous Operations
         // Each Stream copy {vecsPerStream} number of vectors into GPU
+        #pragma unroll
         for (int i = 0; i < n_streams; i++)
         {
             // Entry offset in input for the current stream
