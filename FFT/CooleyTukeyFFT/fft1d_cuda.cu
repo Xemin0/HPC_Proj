@@ -451,7 +451,7 @@ void fft1d_batch_cu2(Complex *h_x, int N, int batch_size,
         last_cuda_error("H2D for batch");
 
         // Launch the Kernel for Batch Input
-        fft1d_batch_device(d_x, N, batch_size, n_blocks, n_streams);
+        fft1d_batch_device(d_x, N, batch_size, n_blocks);
         last_cuda_error("Launching kernel for batch");
 
         //Copy the results back to host memory 
@@ -464,7 +464,7 @@ void fft1d_batch_cu2(Complex *h_x, int N, int batch_size,
     else
     {
         dim3 nthreads(N/2, 1, 1);       // BlockSize = N/2
-        dim3 nblocks(n_blocks, 1, 1)    // Blocks per stream 
+        dim3 nblocks(n_blocks, 1, 1);   // Blocks per stream 
         int sharedMemSize = N * sizeof(cuDoubleComplex); // Shared Mem per block
 
         unsigned int vecsPerStream = (batch_size + n_streams - 1) / n_streams; // ceil(batch_size / n_streams)
@@ -481,7 +481,7 @@ void fft1d_batch_cu2(Complex *h_x, int N, int batch_size,
         last_cuda_error("sub vectors");
 
         // Creating Streams
-        cudaStreams_t streams[n_streams];
+        cudaStream_t streams[n_streams];
         for (int i = 0; i < n_streams; i++)
             cudaStreamCreate(&streams[i]);
         last_cuda_error("streams");
@@ -492,7 +492,7 @@ void fft1d_batch_cu2(Complex *h_x, int N, int batch_size,
         {
             // Entry offset in input for the current stream
             size_t offset = i * vecsPerStream * N;
-            unsigned int nvecs = ( (i + 1 == n_streams) && (batch_size % n_streams)? ) batch_size % n_streams : vecsPerStream; // number of vecs to process
+            unsigned int nvecs = ( (i + 1 == n_streams) && (batch_size % n_streams) )? batch_size % n_streams : vecsPerStream; // number of vecs to process
             dataSize = nvecs * N * sizeof(cuDoubleComplex); // data size to process
 
             // Copy current subset of vectors to GPU
@@ -514,7 +514,7 @@ void fft1d_batch_cu2(Complex *h_x, int N, int batch_size,
         for (int i = 0; i < n_streams; i++)
         {
             cudaStreamDestroy(streams[i]);
-            cudaFree(d_x_sub[i])
+            cudaFree(d_x_sub[i]);
         }
     }
 }
