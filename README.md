@@ -15,7 +15,7 @@
 |Method| APIs Proportion of Current Implementations|
 |:---:| :---:|
 |500 ThreadBlocks|<img src="./results/pix/APIcallsProportion.png" height="200">|
-|5 Streams & 100 Thread Blocks per Stream|<img src="./results/pix/APIproportionStreams.png" height="187">|
+|5 Streams & 100 Thread Blocks per Stream|<img src="./results/pix/APIproportionStreams.png" height="127">|
 
 
 ### Datasets
