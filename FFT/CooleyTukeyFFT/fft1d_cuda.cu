@@ -251,7 +251,7 @@ void fft1d_cu(Complex *h_x, int N)
 // ###########################################
 
 
-void fft1d_batch_cu(Complex *h_x, int N, int batch_size)
+void fft1d_batch_cu(Complex *h_x, int N, int batch_size, int n_streams)
 {
     /*
      * Wrapper Function of 1D FFT with CUDA for Batch Input
@@ -414,10 +414,11 @@ void fft1d_batch_device(cuDoubleComplex *d_x, int N, int batch_size,
      * 
      * As the Butterfly Step requires N/2 threads
      * we will fix BlockDim = N/2
-     * GridDim = n_blocks
+     * GridDim = n_blocks = number of blocks per streams
+     * n_streams: number of streams
      */
-    dim3 nthreads(N/2, 1, 1);   // BlockDim
-    dim3 nblocks(n_blocks, 1, 1);      // GridDim
+    dim3 nthreads(N/2, 1, 1);        // BlockDim
+    dim3 nblocks(n_blocks, 1, 1);    // GridDim per Stream
 
     int sharedMemSize = sizeof(cuDoubleComplex) * N; // Total shared memory size per block
 
@@ -427,7 +428,7 @@ void fft1d_batch_device(cuDoubleComplex *d_x, int N, int batch_size,
 
 
 void fft1d_batch_cu2(Complex *h_x, int N, int batch_size,
-                    int n_blocks)
+                    int n_blocks, int n_streams)
 {
     /*
      * Wrapper Function of 1D FFT with CUDA for Batch Input with Multiple Blocks
@@ -443,20 +444,80 @@ void fft1d_batch_cu2(Complex *h_x, int N, int batch_size,
     cudaMalloc((void**)&d_x, batch_size * N * sizeof(cuDoubleComplex));
     last_cuda_error("Malloc for batch d_x");
 
-    // Copy the batch of vectors from HOST to DEVICE
-    cudaMemcpy(d_x, h_x, batch_size * N * sizeof(cuDoubleComplex), cudaMemcpyHostToDevice);
-    last_cuda_error("H2D for batch");
+    if (0 == n_streams || 1 == n_streams)
+    {
+        // Copy the batch of vectors from HOST to DEVICE
+        cudaMemcpy(d_x, h_x, batch_size * N * sizeof(cuDoubleComplex), cudaMemcpyHostToDevice);
+        last_cuda_error("H2D for batch");
 
-    // Launch the kernel for each vector
-    fft1d_batch_device(d_x, N, batch_size, n_blocks);
-    last_cuda_error("Launching kernel for batch");
+        // Launch the Kernel for Batch Input
+        fft1d_batch_device(d_x, N, batch_size, n_blocks, n_streams);
+        last_cuda_error("Launching kernel for batch");
 
-    //Copy the results back to host memory 
-    cudaMemcpy(h_x, d_x, batch_size * N * sizeof(Complex), cudaMemcpyDeviceToHost);
-    last_cuda_error("D2H for batch");
+        //Copy the results back to host memory 
+        cudaMemcpy(h_x, d_x, batch_size * N * sizeof(Complex), cudaMemcpyDeviceToHost);
+        last_cuda_error("D2H for batch");
 
-    // Clean up
-    cudaFree(d_x);
+        // Clean up
+        cudaFree(d_x);
+    }
+    else
+    {
+        dim3 nthreads(N/2, 1, 1);       // BlockSize = N/2
+        dim3 nblocks(n_blocks, 1, 1)    // Blocks per stream 
+        int sharedMemSize = N * sizeof(cuDoubleComplex); // Shared Mem per block
+
+        unsigned int vecsPerStream = (batch_size + n_streams - 1) / n_streams; // ceil(batch_size / n_streams)
+        
+        // Temp Memory for subsets of input batch
+        cuDoubleComplex *d_x_sub[n_streams];
+        size_t dataSize;
+        for (int i = 0; i < n_streams; i++)
+        {
+            // Calculate the data size (handle the remainders)
+            dataSize = ( (i + 1 == n_streams) && (batch_size % n_streams)? ) (batch_size % n_streams)*N * sizeof(cuDoubleComplex): vecsPerStream*N * sizeof(cuDoubleComplex); 
+            cudaMalloc(&d_x_sub[i], dataSize);
+        }
+        last_cuda_error("sub vectors");
+
+        // Creating Streams
+        cudaStreams_t streams[n_streams];
+        for (int i = 0; i < n_streams; i++)
+            cudaStreamCreate(&streams[i]);
+        last_cuda_error("streams");
+
+        // Asynchronous Operations
+        // Each Stream copy {vecsPerStream} number of vectors into GPU
+        for (int i = 0; i < n_streams; i++)
+        {
+            // Entry offset in input for the current stream
+            size_t offset = i * vecsPerStream * N;
+            unsigned int nvecs = ( (i + 1 == n_streams) && (batch_size % n_streams)? ) batch_size % n_streams : vecsPerStream; // number of vecs to process
+            dataSize = nvecs * N * sizeof(cuDoubleComplex); // data size to process
+
+            // Copy current subset of vectors to GPU
+            cudaMemcpyAsync(d_x_sub[i], h_x + offset, dataSize, cudaMemcpyHostToDevice, streams[i]);
+            last_cuda_error("H2D stream");
+
+            // Launch kernel on the current stream
+            fft1d_batch_kernel <<< nblocks, nthreads, sharedMemSize, streams[i] >>> (d_x_sub[i], N, nvecs, n_blocks);
+            last_cuda_error("stream kernel launching");
+
+            cudaMemcpyAsync(h_x + offset, d_x_sub[i], dataSize, cudaMemcpyDeviceToHost, streams[i]);
+            last_cuda_error("D2H stream");
+        }
+
+        // Sync Device for completion
+        cudaDeviceSynchronize();
+
+        // Clean up
+        for (int i = 0; i < n_streams; i++)
+        {
+            cudaStreamDestroy(streams[i]);
+            cudaFree(d_x_sub[i])
+        }
+    }
 }
+
 
 // ###########################################

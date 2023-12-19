@@ -30,7 +30,7 @@ typedef complex<double> Complex;
 
 // Define the function pointer
 typedef void (*FuncPtr)(Complex*, int);     // for 1D FFT methods
-typedef void (*FuncPtrBatch)(Complex*, int, int, int); // for 1D Batch FFT methods
+typedef void (*FuncPtrBatch)(Complex*, int, int, int, int); // for 1D Batch FFT methods
 typedef void (*FuncPtr2)(Complex**, int, int);   // for 2D FFT methods
 
 
@@ -134,7 +134,10 @@ float eval_FFT1d_4Data(Dataset1D& ds, FuncPtr func,
 
 
 // ********** 1D FFT for Batch Input Performannce Evaluation *********** //
-float time_FFT1d_4BatchData(Dataset1D& ds, FuncPtrBatch func, int n_blocks, bool isCPU) // ## May need to return HighPrecisionTimer object
+float time_FFT1d_4BatchData(Dataset1D& ds, FuncPtrBatch func,
+                            int n_blocks, 
+                            int n_streams,
+                            bool isCPU) // ## May need to return HighPrecisionTimer object
 {
     /*
      * Time a single run of provided 1D FFT method over the whole dataset as a batch
@@ -170,7 +173,7 @@ float time_FFT1d_4BatchData(Dataset1D& ds, FuncPtrBatch func, int n_blocks, bool
     // 1D FFT with provided method (as a function pointer)
     //start = get_time();
     timer.Start();
-    func(all_vecs, truncated_cols, rows*depth, n_blocks);
+    func(all_vecs, truncated_cols, rows*depth, n_blocks, n_streams);
     //end = get_time();
     timer.Stop();
 
@@ -191,6 +194,7 @@ float time_FFT1d_4BatchData(Dataset1D& ds, FuncPtrBatch func, int n_blocks, bool
 float eval_FFT1d_4BatchData(Dataset1D& ds,
                       FuncPtrBatch func,
                       int n_blocks,
+                      int n_streams,
                       bool isCPU,
                       int warmup, int testruns,
                       bool toFile, std::string filename)
@@ -218,18 +222,18 @@ float eval_FFT1d_4BatchData(Dataset1D& ds,
 
     // Warm up runs
     for (int i = 0; i < warmup; i++)
-        time_FFT1d_4BatchData(ds, func, n_blocks, isCPU);
+        time_FFT1d_4BatchData(ds, func, n_blocks, n_streams, isCPU);
 
 
     // Recording times and take the average
     for (int i = 0; i < testruns; i++)
-        avg_t += time_FFT1d_4BatchData(ds, func, n_blocks, isCPU);
+        avg_t += time_FFT1d_4BatchData(ds, func, n_blocks, n_streams, isCPU);
 
     avg_t /= testruns;
 
     // write to the file if specified
     if (toFile)          
-        timeFile << "Average time of 1D FFT over the whole 1D-Dataset of " << testruns << " runs with " << n_blocks << " Thread Blocks: " << avg_t << " us" << endl;
+        timeFile << "Average time of 1D FFT over the whole 1D-Dataset of " << testruns << " runs with " << n_blocks << " Thread Blocks and " << n_streams << "Streams:" << avg_t << " us" << endl;
 
     timeFile.close();
     return avg_t;
