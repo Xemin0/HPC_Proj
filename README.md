@@ -1,14 +1,21 @@
 # Parallelizing 2D Fast-Fourier Transform Implemented with Cooley-Tukey Algorithm Using CUDA
 
-### Results on Current Implementation of 1D FFT for the Given 1D Dataset (Updated; *Could Be Improved*)
+### Results on Current Implementation of 1D FFT for the Given 1D Dataset (Updated; *Need Further Optimizations*)
 |1D FFT method| Performance (ms)|
 |:---:|:---:|
-|FFTW| 382.74 |
-|Iterative Method(CPU)| 638.01 |
-|Method with Batch Input(GPU-500ThreadBlocks)| 30.15|
+|FFTW| 396.52 |
+|Iterative Method(CPU)| 619.40 |
+|Method with Batch Input<br />(GPU - 500 Thread Blocks)| 25.29|
+|Method with Streams<br />(GPU - 5 Streams & 100 Thread Blocks per Stream)|19.44|
 
-### APIs Proportion of Current Implementation
+### APIs Proportion of Current Implementations
+<!--
 ![CUDA APIs Proportion](./results/pix/APIcallsProportion.png?raw=true "NSIGHT Profile") 
+-->
+|Method| APIs Proportion of Current Implementations|
+|:---:| :---:|
+|500 ThreadBlocks|<img src="./results/pix/APIcallsProportion.png" height="250">|
+|5 Streams & 100 Thread Blocks per Stream|<img src="./resutls/pix/APIproportionStreams.png" height="250">|
 
 
 ### Datasets
@@ -111,10 +118,11 @@ A couple implementation details to consider
         - Test and plot the relationship between performance and number of thread blocks assigned; Compare with theoretical value
         - Add boundary checks when tiling in 1D Batch FFT
         - Correctness
-    - Streams with asynchronous operations
+    - ~Streams with asynchronous operations~
         - Test and plot the relationship between performance and number of streams
         - Correctness
     - ~Implement `eval_performance` for batched methods~
+- **Implement 1D FFT for arbitrary input sizes**
 
 ### 2D FFT
 - ?? Design Kernels for 2D FFT (Nested Calls?)
