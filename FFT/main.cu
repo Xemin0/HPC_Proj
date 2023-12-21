@@ -138,23 +138,23 @@ int main()
     //            "our1d_re.txt");// filename
 	
     // Eval the Correctness of 1D FFT with CUDA and output to a file
-    FFT1d_4BatchData(finger1,
-                fft1d_batch_cu,
-                1,
-                0,
-                true,
-                "our1d_cu.txt");
+    //FFT1d_4BatchData(finger1,
+    //            fft1d_batch_cu,
+    //            1,
+    //            0,
+    //            true,
+    //            "our1d_cu.txt");
 
     // Eval the Correctness of 1D FFT with Batch Input on GPU 
-    FFT1d_4BatchData(finger1, fft1d_batch_cu2, 
-                      500, // num of blocks
-                      0, // number of streams 
-                      true, "our1d_batch.txt");
+    //FFT1d_4BatchData(finger1, fft1d_batch_cu2, 
+    //                  500, // num of blocks
+    //                  0, // number of streams 
+    //                  true, "our1d_batch.txt");
 
-    FFT1d_4BatchData(finger1, fft1d_batch_cu2, 
-                      100, // num of blocks
-                      5, // number of streams 
-                      true, "our1d_batch_streams.txt");
+    //FFT1d_4BatchData(finger1, fft1d_batch_cu2, 
+    //                  100, // num of blocks
+    //                  5, // number of streams 
+    //                  true, "our1d_batch_streams.txt");
 
 
     // ************* 2D FFT *************** //
@@ -178,35 +178,35 @@ int main()
     // ************* 1D FFT *************** //
 
 	// Eval the Average Time Performing Iterative 1D FFT and output to a file
-	//eval_FFT1d_4Data(finger1,	// Dataset
-	// 				 fft_it_1d, // FFT method to test
-    //                 true,    // CPU time
-	// 				 2,			// warm up runs (excluded in eval)
-	// 				 5,			// testruns to take the average of
-	// 				 true,		// if write to file
-	// 				 "our1d_iter"); // base filename
+	eval_FFT1d_4Data(finger1,	// Dataset
+	 				 fft_it_1d, // FFT method to test
+                     true,    // CPU time
+	 				 2,			// warm up runs (excluded in eval)
+	 				 5,			// testruns to take the average of
+	 				 true,		// if write to file
+	 				 "our1d_iter"); // base filename
 
 	// (CPU time) Eval the Average Time Performing 1D FFT with CUDA and output to a file
-	//eval_FFT1d_4BatchData(finger1,	// Dataset
-    //                 fft1d_batch_cu2,// FFT batch method to test
-    //                 500,      // Number of Blocks ************ Can be Changed for optimal results *********** 
-    //                 0,        // Number of Streams **** Can be Changed **** 
-    //                 true,    // CPU time
-	// 				 2,			// warm up runs (excluded in eval)
-	// 				 5,			// testruns to take the average of
-	// 				 true,		// if write to file
-	// 				 "our1d_cu_cpu"); // base filename
+	eval_FFT1d_4BatchData(finger1,	// Dataset
+                     fft1d_batch_cu2,// FFT batch method to test
+                     500,      // Number of Blocks ************ Can be Changed for optimal results *********** 
+                     0,        // Number of Streams **** Can be Changed **** 
+                     true,    // CPU time
+	 				 2,			// warm up runs (excluded in eval)
+	 				 5,			// testruns to take the average of
+	 				 true,		// if write to file
+	 				 "our1d_cu_cpu"); // base filename
 
 	// (CPU time) Eval the Average Time Performing 1D FFT with CUDA Streams and output to a file
-	//eval_FFT1d_4BatchData(finger1,	// Dataset
-    //                 fft1d_batch_cu2,// FFT batch method to test
-    //                 100,      // Number of Blocks *** Can be Changed for optimal results ****
-    //                 5,         // Number of Streams *** Can be Changed ***
-    //                 true,    // CPU time
-	// 				 2,			// warm up runs (excluded in eval)
-	// 				 5,			// testruns to take the average of
-	// 				 true,		// if write to file
-	// 				 "our1d_cu_5_cpu"); // base filename
+	eval_FFT1d_4BatchData(finger1,	// Dataset
+                     fft1d_batch_cu2,// FFT batch method to test
+                     100,      // Number of Blocks *** Can be Changed for optimal results ****
+                     5,         // Number of Streams *** Can be Changed ***
+                     true,    // CPU time
+	 				 2,			// warm up runs (excluded in eval)
+	 				 5,			// testruns to take the average of
+     				 true,		// if write to file
+	 				 "our1d_cu_5_cpu"); // base filename
 
 	// (GPU time) Eval the Average Time Performing 1D FFT with CUDA and output to a file
 	//eval_FFT1d_4BatchData(finger1,	// Dataset
@@ -219,13 +219,13 @@ int main()
 	// 				 "our1d_cu_gpu"); // base filename
 
 	// Eval the Average Time Performing 1D FFT with FFTW and output to a file
-	//eval_FFT1d_4Data(finger1,	// Dataset
-	// 				 fftw_1d_wrapper, // FFT method to test
-    //                 true,    // CPU time
-	// 				 2,			// warm up runs (excluded in eval)
-	// 				 5,			// testruns to take the average of
-	// 				 true,		// if write to file
-	// 				 "our1d_fftw"); // base filename
+	eval_FFT1d_4Data(finger1,	// Dataset
+	 				 fftw_1d_wrapper, // FFT method to test
+                     true,    // CPU time
+	 				 2,			// warm up runs (excluded in eval)
+	 				 5,			// testruns to take the average of
+	 				 true,		// if write to file
+	 				 "our1d_fftw"); // base filename
 
     // ************* 2D FFT *************** //
 
