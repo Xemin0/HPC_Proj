@@ -112,15 +112,15 @@ A couple implementation details to consider
 ### 1D FFT
 - ~Correctness of 1D FFT CUDA method~
 - Optimization for long vector FFT
-- 1D FFT for batch input
+- ~1D FFT for batch input~
     - ~Sequentially launch the kernels~
     - ~Using thread blocks to process the input in batches(Tiling)~
         - Test and plot the relationship between performance and number of thread blocks assigned; Compare with theoretical value
         - Add boundary checks when tiling in 1D Batch FFT
-        - Correctness
+        - ~Correctness~
     - ~Streams with asynchronous operations~
         - Test and plot the relationship between performance and number of streams
-        - Correctness
+        - ~Correctness~
     - ~Implement `eval_performance` for batched methods~
 - **Implement 1D FFT for arbitrary input sizes**
 
