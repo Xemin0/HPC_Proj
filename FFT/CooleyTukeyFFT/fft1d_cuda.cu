@@ -247,8 +247,7 @@ void fft1d_cu(Complex *h_x, int N)
 // #### Kernels for Kernel Launching Methods Batch Input
 // ####
 // #### - fft1d_batch_cu    : Sequentially call the kernels for each vector in batch 
-// #### - fft1d_batch_cu2   : With kernels that handles the batch with thread blocks (Tiling)
-// #### - fft1d_batch_cu3   : With Streams
+// #### - fft1d_batch_cu2   : With kernels that handles the batch with thread blocks (Tiling); With Streams
 // ###########################################
 
 

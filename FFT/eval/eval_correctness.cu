@@ -136,7 +136,7 @@ void FFT1d_4BatchData(Dataset1D& ds, FuncPtrBatch func,
     for (int i = 0; i < rows; i++)
         for (int k = 0; k < depth; k++)
             for (int j = 0; j < truncated_cols; j++)
-                all_vecs[i*k + j] = ds.getElement(i+1, j+1, k+1);
+                all_vecs[i*k*truncated_cols + j] = ds.getElement(i+1, j+1, k+1);
 
     // 1D FFT with provided method (as a function pointer)
     func(all_vecs, truncated_cols, rows*depth, n_blocks, n_streams);
@@ -145,7 +145,7 @@ void FFT1d_4BatchData(Dataset1D& ds, FuncPtrBatch func,
     for (int i = 0; i < 1; i++) // **** change 1 to rows
         for (int k = 0; k < 1; k++) // **** change 1 to depth
             for (int j = 0; j < truncated_cols; j++)
-                fftFile << "Channel " << i << ", FFT[" << j <<"] = " << all_vecs[i*k + j] << endl;
+                fftFile << "Channel " << i << ", FFT[" << j <<"] = " << all_vecs[i*k*truncated_cols + j] << endl;
 
     // Clean Up
     fftFile.close();
