@@ -170,7 +170,7 @@ float time_FFT1d_4BatchData(Dataset1D& ds, FuncPtrBatch func,
         for (int k = 0; k < depth; k++)
             // load channel/row data to tmp
             for (int j = 0; j < truncated_cols; j++)
-                all_vecs[i*k*truncated_cols + j] = ds.getElement(i+1, j+1, k+1); // Copy by value ?? not by reference??
+                all_vecs[i*depth*truncated_cols + k*truncated_cols + j] = ds.getElement(i+1, j+1, k+1); // Copy by value ?? not by reference??
 
     // 1D FFT with provided method (as a function pointer)
     //start = get_time();
