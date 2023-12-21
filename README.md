@@ -97,9 +97,13 @@ sbatch test_cuda.sh
 
 ### 2D FFT
 A couple implementation details to consider
-- For effective data exchanges among a 2D thread BLOCK, may need to implement 2D FFT from scratch without sequential subKernel Calls
-- Alternatively, offload row-wise 1D FFT calls to CUDA Streams before writing to the global memory for later column-wise 1D FFTs
-- Or utilize 1D Batch FFT
+- 2D FFT for a single matrix: call 1D FFT for batch input(twice) across rows then columns
+- 2D FFT for a batch input of matrices
+    - (Dynamic Parallelism)Nested Kernel Calls: that calls 2D FFT method/kernel for one matrix in parallel
+        - Complicated in manage resources for subkernels
+    - Redesign the 2D FFT Kernel for batch input from scratch
+        - Significant coding effort and complexity
+        - Easier resource management
 
 ### Performance Evaluation Workflow for CUDA Methods
 - As `cudaMalloc` and `cudaFree` take up **RIDICULOUS** amount of time compared to kernels, for larger datasets, consider processing data as a batch.
@@ -125,9 +129,10 @@ A couple implementation details to consider
 - **Implement 1D FFT for arbitrary input sizes**
 
 ### 2D FFT
-- ?? Design Kernels for 2D FFT (Nested Calls?)
-- ?? Directly Optimize 2D FFT after `bitReverse` step
-- Launch 1D FFT for batch input twice
+- 2D FFT for a single matrix: call 1D FFT for batch twice
+- 2D FFT for batch input of matrices:
+    - (Dynamic Parallelism) Nested Kernel Calls
+    - From scratch
 - Correctness and Performance
 
 ### Misc
