@@ -21,7 +21,7 @@
 #include "../lib/timer.h" // get_time() return time in microsecond (us)
                           // HighPrecisionTimer that measure both CPU and GPU time
 #include "../lib/loader.h"
-#include "../lib/fft1d_cuda.h" // fft1d_batch_cu()
+//#include "../lib/fft1d_cuda.h" // fft1d_batch_cu()
                                // fft1d_batch_cu2()
 
 using namespace std;
@@ -30,7 +30,9 @@ typedef complex<double> Complex;
 
 // Define the function pointer
 typedef void (*FuncPtr)(Complex*, int);     // for 1D FFT methods
+                                    // 1D Array, Length 
 typedef void (*FuncPtrBatch)(Complex*, int, int, int, int); // for 1D Batch FFT methods
+                                    // 1D Array, Length, BatchSize, num_blocks, num_streams
 typedef void (*FuncPtr2)(Complex**, int, int);   // for 2D FFT methods
 
 

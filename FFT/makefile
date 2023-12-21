@@ -33,7 +33,7 @@ SOURCES = $(SRC_DIR)/main.cu \
 		  $(UTILS_DIR)/vec_utils.cpp \
 		  $(UTILS_DIR)/cuda_math.cu \
 		  $(UTILS_DIR)/cuda_check.cu \
-		  $(EVAL_DIR)/eval_correctness.cpp \
+		  $(EVAL_DIR)/eval_correctness.cu \
 		  $(EVAL_DIR)/eval_performance.cu \
 		  $(CT_DIR)/iterative_CT.cpp \
 		  $(CT_DIR)/recursive_CT.cpp \
