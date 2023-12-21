@@ -132,14 +132,16 @@ int main()
                 "our1d_fftw.txt");// filename
     */
     // Eval the Correctness of Recursive 1D FFT and output to a file
-    FFT1d_4Data(finger1, // Dataset
-				fft_re_1d, // FFT method to test
-                true, // if write toFile
-                "our1d_re.txt");// filename
+    //FFT1d_4Data(finger1, // Dataset
+	//			fft_re_1d, // FFT method to test
+    //            true, // if write toFile
+    //            "our1d_re.txt");// filename
 	
     // Eval the Correctness of 1D FFT with CUDA and output to a file
-    FFT1d_4Data(finger1,
-                fft1d_cu,
+    FFT1d_4BatchData(finger1,
+                fft1d_batch_cu,
+                1,
+                0,
                 true,
                 "our1d_cu.txt");
 
