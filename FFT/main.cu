@@ -147,12 +147,12 @@ int main()
     FFT1d_4BatchData(finger1, fft1d_batch_cu2, 
                       500, // num of blocks
                       0, // number of streams 
-                      true, "our1d_batch.txt")
+                      true, "our1d_batch.txt");
 
     FFT1d_4BatchData(finger1, fft1d_batch_cu2, 
                       100, // num of blocks
                       5, // number of streams 
-                      true, "our1d_batch_streams.txt")
+                      true, "our1d_batch_streams.txt");
 
 
     // ************* 2D FFT *************** //
